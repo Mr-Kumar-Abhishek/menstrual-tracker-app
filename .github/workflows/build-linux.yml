@@ -19,7 +19,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y python3-pip xclip xsel
+        sudo apt-get install -y python3-pip xclip xsel xvfb
     - name: Install Poetry
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
@@ -29,7 +29,7 @@ jobs:
         poetry run pip install pyinstaller
     - name: Build with PyInstaller
       run: |
-        poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+        xvfb-run poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
