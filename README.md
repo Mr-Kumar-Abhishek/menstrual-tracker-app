@@ -67,5 +67,6 @@ buildozer android debug
 
 ## 📜 License
 
-This project is licensed under the **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**. 
-Please refer to the `LICENSE` file for the full legal text.
+This project is dual-licensed:
+- The **source code** is licensed under the **MIT License**. Please see the `LICENSE` file for more details.
+- The **documentation and assets** are licensed under the **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**. Please see the `LICENSE-DOCS` file for more details.
