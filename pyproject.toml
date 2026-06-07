@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "menstrual-tracker-app"
+version = "0.1.0"
+description = "A privacy-focused, cross-platform menstrual cycle tracking application"
+authors = ["Abhishek Kumar <mr.kumar.abhishek@outlook.in>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kivy = "^2.3.0"
+kivymd = "^1.1.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+flake8 = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
