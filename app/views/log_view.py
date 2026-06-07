@@ -23,20 +23,41 @@ KV = '''
             text: root.today_str
             mode: "rectangle"
 
-        MDTextField:
+        MDLabel:
+            text: "Flow Intensity"
+            font_style: "Caption"
+
+        Spinner:
             id: flow_field
-            hint_text: "Flow Intensity (Light/Medium/Heavy)"
-            mode: "rectangle"
+            text: "Medium"
+            values: ["Light", "Medium", "Heavy"]
+            size_hint_y: None
+            height: "48dp"
+            background_color: app.theme_cls.primary_color
 
-        MDTextField:
+        MDLabel:
+            text: "Primary Symptom"
+            font_style: "Caption"
+
+        Spinner:
             id: symptoms_field
-            hint_text: "Symptoms (comma separated)"
-            mode: "rectangle"
+            text: "None"
+            values: ["None", "Cramps", "Headache", "Bloating", "Fatigue", "Acne"]
+            size_hint_y: None
+            height: "48dp"
+            background_color: app.theme_cls.primary_color
 
-        MDTextField:
+        MDLabel:
+            text: "Mood"
+            font_style: "Caption"
+
+        Spinner:
             id: mood_field
-            hint_text: "Mood"
-            mode: "rectangle"
+            text: "Neutral"
+            values: ["Happy", "Sad", "Irritable", "Anxious", "Neutral", "Mood Swings"]
+            size_hint_y: None
+            height: "48dp"
+            background_color: app.theme_cls.primary_color
 
         MDRaisedButton:
             text: "Save Log"
