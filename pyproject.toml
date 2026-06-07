@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "menstrual-tracker-app"
 version = "0.1.0"
+package-mode = false
 description = "A privacy-focused, cross-platform menstrual cycle tracking application"
 authors = ["Abhishek Kumar <mr.kumar.abhishek@outlook.in>"]
 
