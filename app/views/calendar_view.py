@@ -170,7 +170,9 @@ class CalendarView(MDScreen):
                     
                     # Check for events
                     current_date = date(self.current_year, self.current_month, day)
+                    has_event = False
                     if current_date in events:
+                        has_event = True
                         event_type = events[current_date]['type']
                         if event_type == 'period':
                             btn.md_bg_color = [0.8, 0.2, 0.2, 1] # Red
@@ -184,6 +186,15 @@ class CalendarView(MDScreen):
                             btn.md_bg_color = [0.2, 0.6, 0.8, 1] # Light Blue
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
+                            
+                    if current_date == date.today():
+                        if not has_event:
+                            from kivymd.app import MDApp
+                            btn.md_bg_color = MDApp.get_running_app().theme_cls.primary_color
+                            btn.theme_text_color = "Custom"
+                            btn.text_color = [1, 1, 1, 1]
+                        else:
+                            btn.line_color = [0, 0, 0, 1] # Black outline to highlight today if it has an event
                     
                     self.ids.calendar_grid.add_widget(btn)
 
@@ -204,5 +215,7 @@ class CalendarView(MDScreen):
         self.populate_calendar()
         
     def on_enter(self):
-        # Refresh when tab is opened
+        # Reset to today's date when tab is opened
+        self.current_year = date.today().year
+        self.current_month = date.today().month
         self.populate_calendar()
