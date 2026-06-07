@@ -1,6 +1,9 @@
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
-from app.views.dashboard_view import DashboardView
+from app.views.main_view import MainView
+# Ensure child views are loaded
+import app.views.calendar_view
+import app.views.log_view
 
 class MenstrualTrackerApp(MDApp):
     def build(self):
@@ -8,9 +11,8 @@ class MenstrualTrackerApp(MDApp):
         self.theme_cls.theme_style = "Light"
 
         sm = MDScreenManager()
-        
-        dashboard = DashboardView(name='dashboard')
-        sm.add_widget(dashboard)
+        main_view = MainView(name='main')
+        sm.add_widget(main_view)
 
         return sm
 
