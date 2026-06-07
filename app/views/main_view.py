@@ -6,9 +6,9 @@ from app.views.dashboard_view import DashboardView
 KV = '''
 <MainView>:
     MDBottomNavigation:
-        panel_color: app.theme_cls.surfaceColor
-        selected_color_background: app.theme_cls.primaryColor
-        text_color_active: app.theme_cls.primaryColor
+        panel_color: app.theme_cls.bg_normal
+        selected_color_background: app.theme_cls.primary_color
+        text_color_active: app.theme_cls.primary_color
 
         MDBottomNavigationItem:
             name: 'screen_dashboard'
