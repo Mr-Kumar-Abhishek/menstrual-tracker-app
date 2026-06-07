@@ -24,6 +24,8 @@ jobs:
         poetry install
         poetry run pip install pyinstaller
     - name: Build with PyInstaller
+      env:
+        KIVY_GL_BACKEND: mock
       run: |
         poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
     - name: Upload Artifact
