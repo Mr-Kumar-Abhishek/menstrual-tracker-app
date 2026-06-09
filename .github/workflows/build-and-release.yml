@@ -1,0 +1,125 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+
+  build-linux:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip xclip xsel xvfb
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
+    - name: Install project dependencies
+      run: |
+        poetry install
+        poetry run pip install pyinstaller
+    - name: Build with PyInstaller
+      run: xvfb-run poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MenstrualTracker-Linux
+        path: dist/MenstrualTracker
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ needs.version.outputs.new_tag }}
+        files: dist/MenstrualTracker
+
+  build-windows:
+    needs: version
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install Poetry
+      run: pip install poetry
+    - name: Install dependencies
+      run: |
+        poetry install
+        poetry run pip install pyinstaller
+    - name: Build with PyInstaller
+      env:
+        KIVY_GL_BACKEND: mock
+      run: poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MenstrualTracker-Windows
+        path: dist/MenstrualTracker.exe
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ needs.version.outputs.new_tag }}
+        files: dist/MenstrualTracker.exe
+
+  build-android:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install Buildozer dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake gettext libltdl-dev libtool-bin
+        pip install --user --upgrade buildozer cython virtualenv
+    - name: Prepare requirements
+      run: |
+        pip install poetry
+        poetry export -f requirements.txt --output requirements.txt || true
+    - name: Build with Buildozer
+      run: |
+        if [ ! -f buildozer.spec ]; then ~/.local/bin/buildozer init; fi
+        sed -i 's/^title = My Application/title = MenstrualTracker/' buildozer.spec
+        sed -i 's/^package.name = myapp/package.name = menstrualtracker/' buildozer.spec
+        sed -i 's/^package.domain = org.test/package.domain = com.mrkumar/' buildozer.spec
+        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,kivymd,plyer/' buildozer.spec
+        echo "android.ndk = 25b" >> buildozer.spec
+        echo "android.accept_sdk_license = True" >> buildozer.spec
+        yes | ~/.local/bin/buildozer android debug
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MenstrualTracker-Android
+        path: bin/*.apk
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ needs.version.outputs.new_tag }}
+        files: bin/*.apk
