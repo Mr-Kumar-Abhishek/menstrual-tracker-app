@@ -71,3 +71,19 @@ def test_sql_injection_resistance(storage):
     )
     logs = storage.get_daily_log(date(2026, 1, 2))
     assert logs['flow_intensity'] == malicious_text
+
+def test_get_active_cycle(storage):
+    assert storage.get_active_cycle() is None
+    
+    storage.add_cycle(start_date=date(2026, 1, 1), end_date=None)
+    active = storage.get_active_cycle()
+    assert active is not None
+    assert active['start_date'] == '2026-01-01'
+
+def test_update_cycle_end_date(storage):
+    cycle_id = storage.add_cycle(start_date=date(2026, 1, 1), end_date=None)
+    storage.update_cycle_end_date(cycle_id, date(2026, 1, 5))
+    
+    cycles = storage.get_all_cycles()
+    assert cycles[0]['end_date'] == '2026-01-05'
+    assert storage.get_active_cycle() is None

@@ -61,6 +61,25 @@ class StorageManager:
         conn.close()
         return cycles
 
+    def get_active_cycle(self):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM cycles WHERE end_date IS NULL ORDER BY start_date DESC LIMIT 1")
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            return dict(row)
+        return None
+
+    def update_cycle_end_date(self, cycle_id: int, end_date: date):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE cycles SET end_date = ? WHERE cycle_id = ?
+        ''', (end_date.isoformat(), cycle_id))
+        conn.commit()
+        conn.close()
+
     def add_daily_log(self, log_date: date, flow_intensity: str = None, symptoms: str = None, mood: str = None, notes: str = None):
         conn = self._get_connection()
         cursor = conn.cursor()

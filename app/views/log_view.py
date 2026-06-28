@@ -1,6 +1,7 @@
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 from app.models.storage_manager import StorageManager
+from app.viewmodels.log_viewmodel import LogViewModel
 from datetime import date
 
 KV = '''
@@ -11,7 +12,7 @@ KV = '''
         spacing: "15dp"
 
         MDLabel:
-            text: "Log Symptoms"
+            text: "Log Symptoms & Cycle"
             font_style: "H4"
             halign: "center"
             size_hint_y: None
@@ -59,10 +60,26 @@ KV = '''
             height: "48dp"
             background_color: app.theme_cls.primary_color
 
-        MDRaisedButton:
-            text: "Save Log"
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: "10dp"
+            size_hint_y: None
+            height: "48dp"
             pos_hint: {"center_x": .5}
-            on_release: root.save_log()
+            
+            MDRaisedButton:
+                text: "Save Log"
+                on_release: root.save_log()
+
+            MDRaisedButton:
+                text: "Start Period"
+                md_bg_color: 0.8, 0.2, 0.2, 1
+                on_release: root.start_period()
+                
+            MDRaisedButton:
+                text: "End Period"
+                md_bg_color: 0.5, 0.5, 0.5, 1
+                on_release: root.end_period()
 
         MDLabel:
             id: status_label
@@ -81,19 +98,46 @@ class LogEntryView(MDScreen):
         self.today_str = date.today().isoformat()
         super().__init__(**kwargs)
         self.storage = StorageManager()
+        self.viewmodel = LogViewModel(self.storage)
 
     def save_log(self):
         try:
             log_date = date.fromisoformat(self.ids.date_field.text)
-            self.storage.add_daily_log(
+            self.viewmodel.save_daily_log(
                 log_date=log_date,
-                flow_intensity=self.ids.flow_field.text,
+                flow=self.ids.flow_field.text,
                 symptoms=self.ids.symptoms_field.text,
                 mood=self.ids.mood_field.text
             )
-            self.ids.status_label.text = "Saved successfully!"
+            self.ids.status_label.text = "Log saved successfully!"
             self.ids.status_label.theme_text_color = "Custom"
             self.ids.status_label.text_color = [0, 0.7, 0, 1] # Green
+        except Exception as e:
+            self.ids.status_label.text = f"Error: {str(e)}"
+            self.ids.status_label.theme_text_color = "Error"
+
+    def start_period(self):
+        try:
+            log_date = date.fromisoformat(self.ids.date_field.text)
+            self.viewmodel.start_period(start_date=log_date)
+            self.ids.status_label.text = "Period started!"
+            self.ids.status_label.theme_text_color = "Custom"
+            self.ids.status_label.text_color = [0, 0.7, 0, 1]
+        except Exception as e:
+            self.ids.status_label.text = f"Error: {str(e)}"
+            self.ids.status_label.theme_text_color = "Error"
+
+    def end_period(self):
+        try:
+            log_date = date.fromisoformat(self.ids.date_field.text)
+            if not self.viewmodel.is_period_active():
+                self.ids.status_label.text = "No active period to end."
+                self.ids.status_label.theme_text_color = "Error"
+                return
+            self.viewmodel.end_period(end_date=log_date)
+            self.ids.status_label.text = "Period ended!"
+            self.ids.status_label.theme_text_color = "Custom"
+            self.ids.status_label.text_color = [0, 0.7, 0, 1]
         except Exception as e:
             self.ids.status_label.text = f"Error: {str(e)}"
             self.ids.status_label.theme_text_color = "Error"
