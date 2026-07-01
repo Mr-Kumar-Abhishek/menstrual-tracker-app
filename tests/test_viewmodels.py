@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from app.models.storage_manager import StorageManager
 from app.viewmodels.dashboard_viewmodel import DashboardViewModel
 from app.viewmodels.calendar_viewmodel import CalendarViewModel
+from app.viewmodels.settings_viewmodel import SettingsViewModel
 
 @pytest.fixture
 def storage():
@@ -64,3 +65,25 @@ def test_calendar_prediction_generation(storage):
     # Predicted ovulation (14 days before Jan 29 = Jan 15)
     assert date(2026, 1, 15) in jan_events
     assert jan_events[date(2026, 1, 15)]['type'] == 'predicted_ovulation'
+
+def test_calendar_logged_symptoms(storage):
+    storage.add_daily_log(date(2026, 1, 10), flow_intensity="Heavy", symptoms="Cramps", mood="Sad")
+    vm = CalendarViewModel(storage)
+    
+    jan_events = vm.get_events_for_month(2026, 1)
+    
+    assert date(2026, 1, 10) in jan_events
+    assert jan_events[date(2026, 1, 10)].get('has_symptoms') is True
+
+def test_settings_viewmodel(storage, tmp_path):
+    vm = SettingsViewModel(storage)
+    
+    # Default is True
+    assert vm.get_notifications_enabled() is True
+    
+    vm.set_notifications_enabled(False)
+    assert vm.get_notifications_enabled() is False
+    
+    export_path = tmp_path / "export.json"
+    vm.export_data(str(export_path))
+    assert export_path.exists()

@@ -58,3 +58,19 @@ def test_missing_end_date():
     engine = PredictionEngine(historical_cycles=cycles)
     next_period = engine.predict_next_period()
     assert next_period == date(2026, 1, 1) + timedelta(days=28)
+
+def test_prediction_end_date():
+    cycles = [
+        {'start_date': '2026-03-01', 'end_date': '2026-03-05'}, # 5 days
+        {'start_date': '2026-01-31', 'end_date': '2026-02-04'}, # 5 days
+        {'start_date': '2026-01-01', 'end_date': '2026-01-08'}  # 8 days
+    ]
+    # avg duration = (5+5+8)/3 = 6
+    engine = PredictionEngine(historical_cycles=cycles)
+    start_date = engine.predict_next_period()
+    end_date = engine.predict_next_period_end_date()
+    assert end_date == start_date + timedelta(days=6 - 1)
+
+def test_prediction_end_date_no_history():
+    engine = PredictionEngine(historical_cycles=[])
+    assert engine.predict_next_period_end_date() is None

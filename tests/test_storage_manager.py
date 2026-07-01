@@ -22,6 +22,7 @@ def test_database_initialization(storage):
     conn.close()
     assert "cycles" in tables
     assert "daily_logs" in tables
+    assert "settings" in tables
 
 def test_add_and_get_cycle(storage):
     cycle_id = storage.add_cycle(start_date=date(2026, 1, 1), end_date=date(2026, 1, 5))
@@ -87,3 +88,44 @@ def test_update_cycle_end_date(storage):
     cycles = storage.get_all_cycles()
     assert cycles[0]['end_date'] == '2026-01-05'
     assert storage.get_active_cycle() is None
+
+def test_settings(storage):
+    # Test default
+    assert storage.get_setting("nonexistent") is None
+    assert storage.get_setting("notifications", "False") == "False"
+    
+    # Test set and get
+    storage.set_setting("notifications", "True")
+    assert storage.get_setting("notifications") == "True"
+    
+    # Test update
+    storage.set_setting("notifications", "False")
+    assert storage.get_setting("notifications") == "False"
+
+def test_get_all_daily_logs(storage):
+    storage.add_daily_log(date(2026, 1, 1), "Light", "None", "Happy", "")
+    storage.add_daily_log(date(2026, 1, 2), "Heavy", "Cramps", "Sad", "")
+    logs = storage.get_all_daily_logs()
+    assert len(logs) == 2
+    assert logs[0]['date'] == '2026-01-01'
+    assert logs[1]['date'] == '2026-01-02'
+
+def test_export_data(storage, tmp_path):
+    storage.add_cycle(start_date=date(2026, 1, 1), end_date=date(2026, 1, 5))
+    storage.add_daily_log(date(2026, 1, 1), "Light", "None", "Happy", "Note")
+    
+    export_file = tmp_path / "export.json"
+    storage.export_data(str(export_file))
+    
+    assert export_file.exists()
+    
+    import json
+    with open(export_file, 'r') as f:
+        data = json.load(f)
+        
+    assert "cycles" in data
+    assert "daily_logs" in data
+    assert len(data['cycles']) == 1
+    assert data['cycles'][0]['start_date'] == '2026-01-01'
+    assert len(data['daily_logs']) == 1
+    assert data['daily_logs'][0]['notes'] == 'Note'

@@ -1,0 +1,20 @@
+{
+    "cycles": [
+        {
+            "cycle_id": 1,
+            "start_date": "2026-07-02",
+            "end_date": null,
+            "cycle_length": null
+        }
+    ],
+    "daily_logs": [
+        {
+            "log_id": 1,
+            "date": "2026-07-02",
+            "flow_intensity": "Medium",
+            "symptoms": "None",
+            "mood": "Neutral",
+            "notes": "Test note from UI"
+        }
+    ]
+}

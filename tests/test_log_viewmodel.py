@@ -42,6 +42,7 @@ def test_end_period(storage):
 
 def test_save_log(storage):
     vm = LogViewModel(storage)
-    vm.save_daily_log(date(2026, 1, 2), "Heavy", "Cramps", "Sad")
+    vm.save_daily_log(date(2026, 1, 2), "Heavy", "Cramps", "Sad", "Feeling down")
     log = storage.get_daily_log(date(2026, 1, 2))
     assert log['flow_intensity'] == "Heavy"
+    assert log['notes'] == "Feeling down"
