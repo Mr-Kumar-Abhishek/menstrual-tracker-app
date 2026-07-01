@@ -42,4 +42,13 @@ class CalendarViewModel:
                         events[curr] = {'type': 'predicted_ovulation'}
                     curr += timedelta(days=1)
 
+        # Add logged symptoms
+        logs = self.storage.get_all_daily_logs()
+        for log in logs:
+            log_date = date.fromisoformat(log['date'])
+            if log_date.year == year and log_date.month == month:
+                if log_date not in events:
+                    events[log_date] = {'type': 'none'}
+                events[log_date]['has_symptoms'] = True
+
         return events

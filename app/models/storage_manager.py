@@ -37,6 +37,14 @@ class StorageManager:
             )
         ''')
         
+        # Create settings table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+        ''')
+        
         conn.commit()
         conn.close()
 
@@ -102,3 +110,44 @@ class StorageManager:
         if row:
             return dict(row)
         return None
+
+    def get_all_daily_logs(self):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM daily_logs")
+        logs = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return logs
+
+    def get_setting(self, key: str, default_value: str = None) -> str:
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM settings WHERE key = ?", (key,))
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            return row['value']
+        return default_value
+
+    def set_setting(self, key: str, value: str):
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT OR REPLACE INTO settings (key, value)
+            VALUES (?, ?)
+        ''', (key, value))
+        conn.commit()
+        conn.close()
+
+    def export_data(self, file_path: str):
+        import json
+        cycles = self.get_all_cycles()
+        logs = self.get_all_daily_logs()
+        
+        data = {
+            "cycles": cycles,
+            "daily_logs": logs
+        }
+        
+        with open(file_path, 'w') as f:
+            json.dump(data, f, indent=4)

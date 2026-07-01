@@ -85,6 +85,20 @@ KV = '''
                 text: "Ovulation"
                 font_style: "Caption"
 
+            # Symptoms Logged
+            Widget:
+                size_hint_x: None
+                width: "20dp"
+                canvas:
+                    Color:
+                        rgba: 0, 0.7, 0, 1 # Green
+                    Line:
+                        rectangle: (self.x, self.y, self.width, self.height)
+                        width: 1.5
+            MDLabel:
+                text: "Symptoms"
+                font_style: "Caption"
+
         # Days of Week Header
         MDGridLayout:
             cols: 7
@@ -186,6 +200,9 @@ class CalendarView(MDScreen):
                             btn.md_bg_color = [0.2, 0.6, 0.8, 1] # Light Blue
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
+                            
+                        if events[current_date].get('has_symptoms'):
+                            btn.line_color = [0, 0.7, 0, 1] # Green outline for symptoms
                             
                     if current_date == date.today():
                         if not has_event:

@@ -23,10 +23,11 @@ class LogViewModel:
         if active_cycle:
             self.storage.update_cycle_end_date(active_cycle['cycle_id'], end_date)
 
-    def save_daily_log(self, log_date: date, flow: str, symptoms: str, mood: str):
+    def save_daily_log(self, log_date: date, flow: str, symptoms: str, mood: str, notes: str = ""):
         self.storage.add_daily_log(
             log_date=log_date,
             flow_intensity=flow,
             symptoms=symptoms,
-            mood=mood
+            mood=mood,
+            notes=notes
         )

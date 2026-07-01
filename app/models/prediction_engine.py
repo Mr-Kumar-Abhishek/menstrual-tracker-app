@@ -24,6 +24,19 @@ class PredictionEngine:
             
         return max(21, min(35, round(total_days / intervals)))
 
+    def _get_average_period_duration(self) -> int:
+        valid_cycles = [c for c in self.historical_cycles if c.get('end_date')]
+        if not valid_cycles:
+            return 5 # Default period duration
+
+        total_days = 0
+        for c in valid_cycles:
+            start = datetime.strptime(c['start_date'], '%Y-%m-%d').date()
+            end = datetime.strptime(c['end_date'], '%Y-%m-%d').date()
+            total_days += (end - start).days + 1 # Include start and end days
+            
+        return max(2, min(10, round(total_days / len(valid_cycles))))
+
     def predict_next_period(self) -> date | None:
         if not self.historical_cycles:
             return None
@@ -34,6 +47,15 @@ class PredictionEngine:
         
         avg_length = self._get_average_cycle_length()
         return most_recent_start + timedelta(days=avg_length)
+
+    def predict_next_period_end_date(self) -> date | None:
+        start_date = self.predict_next_period()
+        if not start_date:
+            return None
+        duration = self._get_average_period_duration()
+        # Subtract 1 because start date is day 1
+        return start_date + timedelta(days=duration - 1)
+
 
     def predict_ovulation_window(self) -> tuple[date, date] | tuple[None, None]:
         next_period = self.predict_next_period()

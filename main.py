@@ -4,6 +4,8 @@ from app.views.main_view import MainView
 from app.models.notification_manager import NotificationManager
 import app.views.calendar_view
 import app.views.log_view
+import app.views.settings_view
+from app.models.storage_manager import StorageManager
 
 class MenstrualTrackerApp(MDApp):
     def build(self):
@@ -12,7 +14,10 @@ class MenstrualTrackerApp(MDApp):
         
         # Check and send any pending notifications
         try:
-            NotificationManager().check_and_send_reminders()
+            storage = StorageManager()
+            storage.initialize_database()
+            if storage.get_setting('notifications_enabled', 'True') == 'True':
+                NotificationManager().check_and_send_reminders()
         except Exception as e:
             print("Failed to schedule notifications:", e)
 

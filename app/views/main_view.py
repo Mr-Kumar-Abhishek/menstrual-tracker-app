@@ -33,6 +33,13 @@ KV = '''
             
             LogEntryView:
                 id: log_view
+        MDBottomNavigationItem:
+            name: 'screen_settings'
+            text: 'Settings'
+            icon: 'cog'
+            
+            SettingsView:
+                id: settings_view
 '''
 Builder.load_string(KV)
 

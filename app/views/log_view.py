@@ -60,6 +60,14 @@ KV = '''
             height: "48dp"
             background_color: app.theme_cls.primary_color
 
+        MDTextField:
+            id: notes_field
+            hint_text: "Personal Notes"
+            mode: "rectangle"
+            multiline: True
+            size_hint_y: None
+            height: "80dp"
+
         MDBoxLayout:
             orientation: "horizontal"
             spacing: "10dp"
@@ -107,7 +115,8 @@ class LogEntryView(MDScreen):
                 log_date=log_date,
                 flow=self.ids.flow_field.text,
                 symptoms=self.ids.symptoms_field.text,
-                mood=self.ids.mood_field.text
+                mood=self.ids.mood_field.text,
+                notes=self.ids.notes_field.text
             )
             self.ids.status_label.text = "Log saved successfully!"
             self.ids.status_label.theme_text_color = "Custom"
