@@ -32,5 +32,11 @@ Formula: `Staffing = Effort / Time`
 - `Staffing = 13.0 / 6.5`
 - `Staffing ≈ 2 Developers`
 
+### Total Estimated Cost (INR)
+Formula: `Cost = Effort * Average Monthly Salary`
+- Assuming an average developer salary of **₹1,00,000 per month**
+- `Cost = 13.0 * ₹1,00,000`
+- `Cost = ₹13,00,000` (13 Lakhs INR)
+
 ## 5. Conclusion
-Based on the Basic COCOMO model, developing the MenstrualTracker App from scratch to its current feature set would take approximately **2 developers** working for about **6.5 months**, resulting in a total effort of **13.0 person-months**.
+Based on the Basic COCOMO model, developing the MenstrualTracker App from scratch to its current feature set would take approximately **2 developers** working for about **6.5 months**, resulting in a total effort of **13.0 person-months** and an estimated development cost of **₹13,00,000**.
