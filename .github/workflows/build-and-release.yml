@@ -23,6 +23,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: patch
 
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: steps.tag_version.outputs.new_tag != ''
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          generate_release_notes: true
+
   build-linux:
     needs: version
     runs-on: ubuntu-latest
