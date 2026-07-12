@@ -64,6 +64,7 @@ buildozer android debug
 - **ViewModels**: Handles business logic, cycle predictions, and state management.
 - **Views**: KivyMD-based UI components (`DashboardView`, `CalendarView`, `LogEntryView`).
 - **Notifications**: Cross-platform system notifications via `plyer`.
+- **Project Estimation**: See the [COCOMO Calculation Report](COCOMO_Report.md) for effort and cost estimations.
 
 ## 📜 License
 
