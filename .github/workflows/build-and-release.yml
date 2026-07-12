@@ -52,6 +52,10 @@ jobs:
         poetry run pip install pyinstaller
     - name: Build with PyInstaller
       run: xvfb-run poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+    - name: Verify Linux Build
+      run: |
+        test -x dist/MenstrualTracker
+        [ $(stat -c%s "dist/MenstrualTracker") -gt 1000000 ]
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -82,6 +86,11 @@ jobs:
       env:
         KIVY_GL_BACKEND: mock
       run: poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+    - name: Verify Windows Build
+      run: |
+        if (!(Test-Path dist\MenstrualTracker.exe)) { exit 1 }
+        $size = (Get-Item dist\MenstrualTracker.exe).length
+        if ($size -lt 1000000) { exit 1 }
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -121,6 +130,10 @@ jobs:
         echo "android.ndk = 25b" >> buildozer.spec
         echo "android.accept_sdk_license = True" >> buildozer.spec
         yes | ~/.local/bin/buildozer android debug
+    - name: Verify Android APK
+      run: |
+        ls -l bin/*.apk
+        unzip -l bin/*.apk | grep classes.dex
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
