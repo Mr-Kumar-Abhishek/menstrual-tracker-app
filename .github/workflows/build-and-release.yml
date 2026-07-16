@@ -176,13 +176,14 @@ jobs:
         yes | ~/.local/bin/buildozer android release
     - name: Verify Android APK and AAB
       run: |
+        mv bin/*-debug.apk bin/anonymous.menstrual.tracker.mrkumar-debug.apk
         ls -l bin/*.apk
         ls -l bin/*.aab
 
     - name: Prepare AAB for Signing
       run: |
         mkdir -p release_aab
-        mv bin/*-release*.aab release_aab/
+        mv bin/*-release*.aab release_aab/anonymous.menstrual.tracker.mrkumar-release-unsigned.aab
 
     - name: Sign Android Release
       uses: r0adkll/sign-android-release@v1
