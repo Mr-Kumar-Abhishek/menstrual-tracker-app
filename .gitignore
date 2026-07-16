@@ -14,6 +14,12 @@ __pycache__/
 # Logs
 *.log
 android_build_log*.txt
+ios_log*.txt
+android_failed_log.txt
+android_job_log.txt
+
+# Secrets
+secret.key
 
 # IDEs
 .vscode/
