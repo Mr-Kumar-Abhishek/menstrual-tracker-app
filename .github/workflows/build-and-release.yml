@@ -178,20 +178,36 @@ jobs:
       run: |
         ls -l bin/*.apk
         ls -l bin/*.aab
+
+    - name: Prepare AAB for Signing
+      run: |
+        mkdir -p release_aab
+        mv bin/*-release*.aab release_aab/
+
+    - name: Sign Android Release
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: release_aab
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: MenstrualTracker-Android
         path: |
           bin/*.apk
-          bin/*.aab
+          ${{steps.sign_app.outputs.signedReleaseFile}}
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.version.outputs.new_tag }}
         files: |
           bin/*.apk
-          bin/*.aab
+          ${{steps.sign_app.outputs.signedReleaseFile}}
 
   build-ios:
     needs: version
