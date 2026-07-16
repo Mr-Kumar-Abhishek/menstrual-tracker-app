@@ -209,9 +209,9 @@ jobs:
     - name: Build Xcode Archive (unsigned)
       run: |
         cd menstrualtracker-ios
-        xcodebuild archive -project MenstrualTracker.xcodeproj -scheme MenstrualTracker -configuration Release -archivePath MenstrualTracker.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+        xcodebuild archive -project menstrualtracker.xcodeproj -scheme menstrualtracker -configuration Release -archivePath menstrualtracker.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
         cd ..
-        tar -czvf MenstrualTracker-iOS.xcarchive.tar.gz menstrualtracker-ios/MenstrualTracker.xcarchive
+        tar -czvf MenstrualTracker-iOS.xcarchive.tar.gz menstrualtracker-ios/menstrualtracker.xcarchive
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
