@@ -205,7 +205,9 @@ jobs:
         toolchain build python3 kivy
     - name: Create Xcode Project
       run: |
-        toolchain create MenstrualTracker ./
+        mkdir app_source
+        cp -r main.py app/ app_source/
+        toolchain create MenstrualTracker app_source
     - name: Build Xcode Archive (unsigned)
       run: |
         cd menstrualtracker-ios
