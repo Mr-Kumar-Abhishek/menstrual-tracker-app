@@ -31,6 +31,15 @@ class DashboardViewModel:
         else:
             return f"Overdue by {abs(days_away)} days ({date_str})"
 
+    def get_ovulation_prediction(self) -> str:
+        engine = self._get_engine()
+        start_ov, end_ov = engine.predict_ovulation_window()
+        
+        if not start_ov or not end_ov:
+            return "Need more data"
+            
+        return f"{start_ov.strftime('%b %d')} - {end_ov.strftime('%b %d')}"
+
     def get_current_cycle_day(self) -> str:
         cycles = self.storage.get_all_cycles()
         if not cycles:

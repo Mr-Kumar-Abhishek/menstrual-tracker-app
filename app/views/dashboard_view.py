@@ -49,6 +49,22 @@ KV = '''
                 text: "Loading..."
                 font_style: "H5"
 
+        MDCard:
+            orientation: "vertical"
+            padding: "16dp"
+            size_hint: 1, None
+            height: "120dp"
+            elevation: 2
+
+            MDLabel:
+                text: "Ovulation Window"
+                theme_text_color: "Secondary"
+
+            MDLabel:
+                id: ovulation_label
+                text: "Loading..."
+                font_style: "H5"
+
         Widget:
 '''
 Builder.load_string(KV)
@@ -64,3 +80,4 @@ class DashboardView(MDScreen):
     def on_enter(self, *args):
         self.ids.current_cycle_label.text = self.viewmodel.get_current_cycle_day()
         self.ids.prediction_label.text = self.viewmodel.get_next_period_prediction()
+        self.ids.ovulation_label.text = self.viewmodel.get_ovulation_prediction()
