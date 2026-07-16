@@ -171,21 +171,27 @@ jobs:
         sed -i 's/requirements = python3,kivy/requirements = python3,kivy,kivymd,plyer/' buildozer.spec
         echo "android.ndk = 25b" >> buildozer.spec
         echo "android.accept_sdk_license = True" >> buildozer.spec
+        echo "android.release_artifact = aab" >> buildozer.spec
         yes | ~/.local/bin/buildozer android debug
-    - name: Verify Android APK
+        yes | ~/.local/bin/buildozer android release
+    - name: Verify Android APK and AAB
       run: |
         ls -l bin/*.apk
-        unzip -l bin/*.apk | grep classes.dex
+        ls -l bin/*.aab
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: MenstrualTracker-Android
-        path: bin/*.apk
+        path: |
+          bin/*.apk
+          bin/*.aab
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.version.outputs.new_tag }}
-        files: bin/*.apk
+        files: |
+          bin/*.apk
+          bin/*.aab
 
   build-ios:
     needs: version
