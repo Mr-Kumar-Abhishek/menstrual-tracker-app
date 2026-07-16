@@ -74,3 +74,11 @@ def test_prediction_end_date():
 def test_prediction_end_date_no_history():
     engine = PredictionEngine(historical_cycles=[])
     assert engine.predict_next_period_end_date() is None
+
+def test_prediction_end_date_no_end_dates():
+    cycles = [{'start_date': '2026-01-01', 'end_date': None, 'cycle_length': None}]
+    engine = PredictionEngine(historical_cycles=cycles)
+    start_date = engine.predict_next_period()
+    end_date = engine.predict_next_period_end_date()
+    # default period duration is 5 days (so start_date + 4)
+    assert end_date == start_date + timedelta(days=4)
