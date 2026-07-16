@@ -198,8 +198,8 @@ def test_database_encryption():
         assert raw_row[2] != "Irritable"
         assert raw_row[3] != "Very painful today"
         
-        # Verify it's actually encrypted (Fernet output is base64 and starts with 'gAAAAA')
-        assert raw_row[0].startswith("gAAAA")
+        # Verify it's actually encrypted (Output starts with 'AES256GCM$')
+        assert raw_row[0].startswith("AES256GCM$")
     finally:
         if os.path.exists(temp_db):
             try:
