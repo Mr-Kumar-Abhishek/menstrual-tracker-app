@@ -2,14 +2,16 @@ import sqlite3
 import os
 import logging
 from datetime import date
+from app.models.crypto_manager import CryptoManager
 
 logger = logging.getLogger(__name__)
 
 class StorageManager:
-    def __init__(self, db_path="menstrual_tracker.db"):
+    def __init__(self, db_path="menstrual_tracker.db", key_path="secret.key"):
         self.db_path = db_path
         self._fallback_active = False
         self._fallback_conn = None
+        self.crypto = CryptoManager(key_path)
 
     def _resolve_path(self):
         if self.db_path.startswith("file:"):
@@ -128,13 +130,28 @@ class StorageManager:
         conn.commit()
         conn.close()
 
+    def _decrypt_log_row(self, row):
+        if not row:
+            return None
+        d_row = dict(row)
+        d_row['flow_intensity'] = self.crypto.decrypt(d_row.get('flow_intensity')) if d_row.get('flow_intensity') else None
+        d_row['symptoms'] = self.crypto.decrypt(d_row.get('symptoms')) if d_row.get('symptoms') else None
+        d_row['mood'] = self.crypto.decrypt(d_row.get('mood')) if d_row.get('mood') else None
+        d_row['notes'] = self.crypto.decrypt(d_row.get('notes')) if d_row.get('notes') else None
+        return d_row
+
     def add_daily_log(self, log_date: date, flow_intensity: str = None, symptoms: str = None, mood: str = None, notes: str = None):
+        enc_flow = self.crypto.encrypt(flow_intensity) if flow_intensity else None
+        enc_symptoms = self.crypto.encrypt(symptoms) if symptoms else None
+        enc_mood = self.crypto.encrypt(mood) if mood else None
+        enc_notes = self.crypto.encrypt(notes) if notes else None
+        
         conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT OR REPLACE INTO daily_logs (date, flow_intensity, symptoms, mood, notes)
             VALUES (?, ?, ?, ?, ?)
-        ''', (log_date.isoformat(), flow_intensity, symptoms, mood, notes))
+        ''', (log_date.isoformat(), enc_flow, enc_symptoms, enc_mood, enc_notes))
         
         log_id = cursor.lastrowid
         conn.commit()
@@ -147,15 +164,13 @@ class StorageManager:
         cursor.execute("SELECT * FROM daily_logs WHERE date = ?", (log_date.isoformat(),))
         row = cursor.fetchone()
         conn.close()
-        if row:
-            return dict(row)
-        return None
+        return self._decrypt_log_row(row)
 
     def get_all_daily_logs(self):
         conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM daily_logs")
-        logs = [dict(row) for row in cursor.fetchall()]
+        logs = [self._decrypt_log_row(row) for row in cursor.fetchall()]
         conn.close()
         return logs
 

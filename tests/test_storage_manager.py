@@ -157,3 +157,52 @@ def test_database_fallback_to_memory():
         cycles = sm.get_all_cycles()
         assert len(cycles) == 1
         assert cycles[0]['start_date'] == '2026-01-01'
+
+def test_database_encryption():
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+        temp_db = f.name
+        
+    try:
+        sm = StorageManager(db_path=temp_db)
+        sm.initialize_database()
+
+        # Add a log with sensitive data
+        log_date = date(2023, 10, 1)
+        sm.add_daily_log(
+            log_date=log_date,
+            flow_intensity="Heavy",
+            symptoms="Cramps, Headache",
+            mood="Irritable",
+            notes="Very painful today"
+        )
+
+        # 1. Verify that StorageManager decrypts it correctly
+        log = sm.get_daily_log(log_date)
+        assert log['flow_intensity'] == "Heavy"
+        assert log['symptoms'] == "Cramps, Headache"
+        assert log['mood'] == "Irritable"
+        assert log['notes'] == "Very painful today"
+
+        # 2. Bypass StorageManager and verify raw data in DB is encrypted
+        # Read directly using sqlite3 to bypass CryptoManager
+        raw_conn = sqlite3.connect(temp_db)
+        raw_cursor = raw_conn.cursor()
+        raw_cursor.execute("SELECT flow_intensity, symptoms, mood, notes FROM daily_logs WHERE date=?", (log_date.isoformat(),))
+        raw_row = raw_cursor.fetchone()
+        raw_conn.close()
+        
+        # Verify raw data is NOT plaintext
+        assert raw_row[0] != "Heavy"
+        assert raw_row[1] != "Cramps, Headache"
+        assert raw_row[2] != "Irritable"
+        assert raw_row[3] != "Very painful today"
+        
+        # Verify it's actually encrypted (Fernet output is base64 and starts with 'gAAAAA')
+        assert raw_row[0].startswith("gAAAA")
+    finally:
+        if os.path.exists(temp_db):
+            try:
+                os.unlink(temp_db)
+            except Exception:
+                pass

@@ -6,7 +6,7 @@ MenstrualTracker prioritizes your data privacy by keeping all your personal heal
 
 ## 🌟 Features
 
-- **Privacy First**: All data is stored locally via a SQLite database. Includes a robust fallback mechanism to an in-memory database on read-only filesystems to prevent loading freezes.
+- **Privacy First**: All data is stored locally via a SQLite database. Sensitive health data (symptoms, mood, flow intensity, notes) is transparently encrypted at rest using NIST-approved AES-128 (via Fernet). Includes a robust fallback mechanism to an in-memory database on read-only filesystems to prevent loading freezes.
 - **Cross-Platform**: Seamlessly runs on Android, Windows, and Linux.
 - **Dashboard**: Quick overview of your current cycle status and predictions.
 - **Calendar View**: Visual timeline of past periods and predicted future dates.
