@@ -166,8 +166,8 @@ jobs:
       run: |
         if [ ! -f buildozer.spec ]; then ~/.local/bin/buildozer init; fi
         sed -i 's/^title = My Application/title = MenstrualTracker/' buildozer.spec
-        sed -i 's/^package.name = myapp/package.name = menstrualtracker/' buildozer.spec
-        sed -i 's/^package.domain = org.test/package.domain = com.mrkumar/' buildozer.spec
+        sed -i 's/^package.name = myapp/package.name = mrkumar/' buildozer.spec
+        sed -i 's/^package.domain = org.test/package.domain = anonymous.menstrual.tracker/' buildozer.spec
         sed -i 's/requirements = python3,kivy/requirements = python3,kivy,kivymd,plyer/' buildozer.spec
         echo "android.ndk = 25b" >> buildozer.spec
         echo "android.accept_sdk_license = True" >> buildozer.spec
