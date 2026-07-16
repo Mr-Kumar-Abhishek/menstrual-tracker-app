@@ -1,18 +1,33 @@
 import sqlite3
 import os
+import logging
 from datetime import date
+
+logger = logging.getLogger(__name__)
 
 class StorageManager:
     def __init__(self, db_path="menstrual_tracker.db"):
         self.db_path = db_path
+        self._fallback_active = False
+        self._fallback_conn = None
 
-    def _get_connection(self):
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+    def _resolve_path(self):
+        if self.db_path.startswith("file:"):
+            return self.db_path
+        if os.path.isabs(self.db_path):
+            return self.db_path
+            
+        try:
+            from kivy.app import App
+            app = App.get_running_app()
+            if app and app.user_data_dir:
+                return os.path.join(app.user_data_dir, self.db_path)
+        except Exception:
+            pass
+            
+        return self.db_path
 
-    def initialize_database(self):
-        conn = self._get_connection()
+    def _create_tables(self, conn):
         cursor = conn.cursor()
         
         # Create cycles table
@@ -46,6 +61,31 @@ class StorageManager:
         ''')
         
         conn.commit()
+
+    def _get_connection(self):
+        resolved_path = self._resolve_path()
+        uri = True if "?mode=memory" in resolved_path else False
+        
+        try:
+            conn = sqlite3.connect(resolved_path, uri=uri)
+            conn.row_factory = sqlite3.Row
+            return conn
+        except sqlite3.OperationalError as e:
+            if not self._fallback_active:
+                logger.warning(f"Failed to connect to {resolved_path} ({e}). Falling back to in-memory DB.")
+                self.db_path = "file:memdb1?mode=memory&cache=shared"
+                self._fallback_active = True
+                # Keep a persistent connection to prevent the shared memory DB from being destroyed
+                self._fallback_conn = sqlite3.connect(self.db_path, uri=True)
+                self._create_tables(self._fallback_conn)
+                
+            conn = sqlite3.connect(self.db_path, uri=True)
+            conn.row_factory = sqlite3.Row
+            return conn
+
+    def initialize_database(self):
+        conn = self._get_connection()
+        self._create_tables(conn)
         conn.close()
 
     def add_cycle(self, start_date: date, end_date: date = None):

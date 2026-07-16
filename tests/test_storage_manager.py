@@ -129,3 +129,31 @@ def test_export_data(storage, tmp_path):
     assert data['cycles'][0]['start_date'] == '2026-01-01'
     assert len(data['daily_logs']) == 1
     assert data['daily_logs'][0]['notes'] == 'Note'
+
+from unittest.mock import patch
+
+def test_database_fallback_to_memory():
+    # Use a path that simulates a read-only or invalid directory
+    sm = StorageManager(db_path="/invalid_read_only_dir/test.db")
+    
+    original_connect = sqlite3.connect
+    
+    def mock_connect(*args, **kwargs):
+        if "/invalid_read_only_dir" in args[0]:
+            raise sqlite3.OperationalError("unable to open database file")
+        return original_connect(*args, **kwargs)
+        
+    with patch('sqlite3.connect', side_effect=mock_connect):
+        sm.initialize_database()
+        
+        # Verify fallback activated and path was reassigned
+        assert sm._fallback_active is True
+        assert sm.db_path == "file:memdb1?mode=memory&cache=shared"
+        
+        # Verify we can add and retrieve data correctly from the shared memory DB
+        cycle_id = sm.add_cycle(start_date=date(2026, 1, 1))
+        assert cycle_id is not None
+        
+        cycles = sm.get_all_cycles()
+        assert len(cycles) == 1
+        assert cycles[0]['start_date'] == '2026-01-01'
