@@ -35,11 +35,16 @@ A local SQLite database will be used with the following core tables:
 ### 4. Core Components
 #### 4.1 Storage Manager
 Handles all CRUD (Create, Read, Update, Delete) operations with the SQLite database. Ensures data integrity and provides backup/restore functionality.
+- **Resilience**: Implements a shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`) with persistent connections to prevent app freezes on read-only environments (e.g., restricted mobile filesystems).
 
-#### 4.2 Prediction Engine
+#### 4.2 Crypto Manager
+Manages field-level encryption for sensitive health data using NIST-approved AES-128 via the `cryptography` library (Fernet).
+- **Transparent Key Management**: Automatically generates and stores a volatile `secret.key` within the isolated `user_data_dir` to encrypt fields like flow intensity, symptoms, mood, and notes before writing to the database, ensuring data-at-rest protection against casual extraction.
+
+#### 4.3 Prediction Engine
 An algorithmic module that calculates the user's average cycle length and luteal phase from historical data (e.g., a rolling average of the last 6 cycles) to forecast future period dates and ovulation windows.
 
-#### 4.3 Notification Service
+#### 4.4 Notification Service
 A background or scheduled task manager using `plyer` to schedule local reminders for upcoming periods (e.g., "Your period is predicted to start in 2 days").
 
 ### 5. User Interface (View) Structure
