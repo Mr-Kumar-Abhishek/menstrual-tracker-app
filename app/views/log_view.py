@@ -36,17 +36,11 @@ KV = '''
             height: "48dp"
             background_color: app.theme_cls.primary_color
 
-        MDLabel:
-            text: "Primary Symptom"
-            font_style: "Caption"
-
-        Spinner:
+        MDTextField:
             id: symptoms_field
+            hint_text: "Symptoms (e.g. Cramps, Headache)"
+            mode: "rectangle"
             text: "None"
-            values: ["None", "Cramps", "Headache", "Bloating", "Fatigue", "Acne"]
-            size_hint_y: None
-            height: "48dp"
-            background_color: app.theme_cls.primary_color
 
         MDLabel:
             text: "Mood"
