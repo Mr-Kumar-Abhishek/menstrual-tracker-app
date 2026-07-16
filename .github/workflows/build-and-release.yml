@@ -195,20 +195,24 @@ jobs:
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
 
+    - name: Rename Signed AAB
+      run: |
+        mv ${{steps.sign_app.outputs.signedReleaseFile}} bin/anonymous.menstrual.tracker.mrkumar-signed.aab
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: MenstrualTracker-Android
         path: |
           bin/*.apk
-          ${{steps.sign_app.outputs.signedReleaseFile}}
+          bin/*-signed.aab
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.version.outputs.new_tag }}
         files: |
           bin/*.apk
-          ${{steps.sign_app.outputs.signedReleaseFile}}
+          bin/*-signed.aab
 
   build-ios:
     needs: version
