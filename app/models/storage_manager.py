@@ -6,6 +6,7 @@ from app.models.crypto_manager import CryptoManager
 
 logger = logging.getLogger(__name__)
 
+
 class StorageManager:
     def __init__(self, db_path="menstrual_tracker.db", key_path="secret.key"):
         self.db_path = db_path
@@ -18,7 +19,7 @@ class StorageManager:
             return self.db_path
         if os.path.isabs(self.db_path):
             return self.db_path
-            
+
         try:
             from kivy.app import App
             app = App.get_running_app()
@@ -26,12 +27,12 @@ class StorageManager:
                 return os.path.join(app.user_data_dir, self.db_path)
         except Exception:
             pass
-            
+
         return self.db_path
 
     def _create_tables(self, conn):
         cursor = conn.cursor()
-        
+
         # Create cycles table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS cycles (
@@ -53,7 +54,7 @@ class StorageManager:
                 notes TEXT
             )
         ''')
-        
+
         # Create settings table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS settings (
@@ -61,26 +62,27 @@ class StorageManager:
                 value TEXT
             )
         ''')
-        
+
         conn.commit()
 
     def _get_connection(self):
         resolved_path = self._resolve_path()
         uri = True if "?mode=memory" in resolved_path else False
-        
+
         try:
             conn = sqlite3.connect(resolved_path, uri=uri)
             conn.row_factory = sqlite3.Row
             return conn
         except sqlite3.OperationalError as e:
             if not self._fallback_active:
-                logger.warning(f"Failed to connect to {resolved_path} ({e}). Falling back to in-memory DB.")
+                logger.warning(
+                    f"Failed to connect to {resolved_path} ({e}). Falling back to in-memory DB.")
                 self.db_path = "file:memdb1?mode=memory&cache=shared"
                 self._fallback_active = True
                 # Keep a persistent connection to prevent the shared memory DB from being destroyed
                 self._fallback_conn = sqlite3.connect(self.db_path, uri=True)
                 self._create_tables(self._fallback_conn)
-                
+
             conn = sqlite3.connect(self.db_path, uri=True)
             conn.row_factory = sqlite3.Row
             return conn
@@ -97,7 +99,7 @@ class StorageManager:
             INSERT INTO cycles (start_date, end_date)
             VALUES (?, ?)
         ''', (start_date.isoformat(), end_date.isoformat() if end_date else None))
-        
+
         cycle_id = cursor.lastrowid
         conn.commit()
         conn.close()
@@ -114,7 +116,8 @@ class StorageManager:
     def get_active_cycle(self):
         conn = self._get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM cycles WHERE end_date IS NULL ORDER BY start_date DESC LIMIT 1")
+        cursor.execute(
+            "SELECT * FROM cycles WHERE end_date IS NULL ORDER BY start_date DESC LIMIT 1")
         row = cursor.fetchone()
         conn.close()
         if row:
@@ -134,25 +137,30 @@ class StorageManager:
         if not row:
             return None
         d_row = dict(row)
-        d_row['flow_intensity'] = self.crypto.decrypt(d_row.get('flow_intensity')) if d_row.get('flow_intensity') else None
-        d_row['symptoms'] = self.crypto.decrypt(d_row.get('symptoms')) if d_row.get('symptoms') else None
-        d_row['mood'] = self.crypto.decrypt(d_row.get('mood')) if d_row.get('mood') else None
-        d_row['notes'] = self.crypto.decrypt(d_row.get('notes')) if d_row.get('notes') else None
+        d_row['flow_intensity'] = self.crypto.decrypt(
+            d_row.get('flow_intensity')) if d_row.get('flow_intensity') else None
+        d_row['symptoms'] = self.crypto.decrypt(
+            d_row.get('symptoms')) if d_row.get('symptoms') else None
+        d_row['mood'] = self.crypto.decrypt(
+            d_row.get('mood')) if d_row.get('mood') else None
+        d_row['notes'] = self.crypto.decrypt(
+            d_row.get('notes')) if d_row.get('notes') else None
         return d_row
 
     def add_daily_log(self, log_date: date, flow_intensity: str = None, symptoms: str = None, mood: str = None, notes: str = None):
-        enc_flow = self.crypto.encrypt(flow_intensity) if flow_intensity else None
+        enc_flow = self.crypto.encrypt(
+            flow_intensity) if flow_intensity else None
         enc_symptoms = self.crypto.encrypt(symptoms) if symptoms else None
         enc_mood = self.crypto.encrypt(mood) if mood else None
         enc_notes = self.crypto.encrypt(notes) if notes else None
-        
+
         conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT OR REPLACE INTO daily_logs (date, flow_intensity, symptoms, mood, notes)
             VALUES (?, ?, ?, ?, ?)
         ''', (log_date.isoformat(), enc_flow, enc_symptoms, enc_mood, enc_notes))
-        
+
         log_id = cursor.lastrowid
         conn.commit()
         conn.close()
@@ -161,7 +169,8 @@ class StorageManager:
     def get_daily_log(self, log_date: date):
         conn = self._get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM daily_logs WHERE date = ?", (log_date.isoformat(),))
+        cursor.execute("SELECT * FROM daily_logs WHERE date = ?",
+                       (log_date.isoformat(),))
         row = cursor.fetchone()
         conn.close()
         return self._decrypt_log_row(row)
@@ -198,11 +207,11 @@ class StorageManager:
         import json
         cycles = self.get_all_cycles()
         logs = self.get_all_daily_logs()
-        
+
         data = {
             "cycles": cycles,
             "daily_logs": logs
         }
-        
+
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=4)

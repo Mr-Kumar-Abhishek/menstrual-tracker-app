@@ -3,6 +3,7 @@ from datetime import date
 from app.models.storage_manager import StorageManager
 from app.models.prediction_engine import PredictionEngine
 
+
 class NotificationManager:
     def __init__(self):
         self.storage = StorageManager()

@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from app.models.storage_manager import StorageManager
 from app.models.prediction_engine import PredictionEngine
-import calendar
+
 
 class CalendarViewModel:
     def __init__(self, storage: StorageManager):
@@ -10,30 +10,31 @@ class CalendarViewModel:
     def get_events_for_month(self, year: int, month: int) -> dict:
         events = {}
         cycles = self.storage.get_all_cycles()
-        
+
         # Add historical cycles
         for cycle in cycles:
             start_date = date.fromisoformat(cycle['start_date'])
-            end_date = date.fromisoformat(cycle['end_date']) if cycle['end_date'] else start_date + timedelta(days=4)
-            
+            end_date = date.fromisoformat(
+                cycle['end_date']) if cycle['end_date'] else start_date + timedelta(days=4)
+
             current_date = start_date
             while current_date <= end_date:
                 if current_date.year == year and current_date.month == month:
                     events[current_date] = {'type': 'period'}
                 current_date += timedelta(days=1)
-                
+
         # Predictions
         if cycles:
             engine = PredictionEngine(cycles)
             next_period = engine.predict_next_period()
-            
+
             if next_period and next_period.year == year and next_period.month == month:
                 # Highlight 5 days as predicted period
                 for i in range(5):
                     d = next_period + timedelta(days=i)
                     if d.year == year and d.month == month and d not in events:
                         events[d] = {'type': 'predicted_period'}
-                        
+
             start_ov, end_ov = engine.predict_ovulation_window()
             if start_ov and end_ov:
                 curr = start_ov

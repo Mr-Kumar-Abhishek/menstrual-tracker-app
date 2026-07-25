@@ -1,9 +1,27 @@
 {
     "cycles": [
         {
+            "cycle_id": 2,
+            "start_date": "2026-07-25",
+            "end_date": "2026-07-25",
+            "cycle_length": null
+        },
+        {
+            "cycle_id": 3,
+            "start_date": "2026-07-25",
+            "end_date": "2026-07-25",
+            "cycle_length": null
+        },
+        {
+            "cycle_id": 4,
+            "start_date": "2026-07-25",
+            "end_date": null,
+            "cycle_length": null
+        },
+        {
             "cycle_id": 1,
             "start_date": "2026-07-16",
-            "end_date": null,
+            "end_date": "2026-07-24",
             "cycle_length": null
         }
     ],
@@ -11,6 +29,14 @@
         {
             "log_id": 1,
             "date": "2026-07-16",
+            "flow_intensity": "Medium",
+            "symptoms": "None",
+            "mood": "Neutral",
+            "notes": "Test note from UI"
+        },
+        {
+            "log_id": 4,
+            "date": "2026-07-25",
             "flow_intensity": "Medium",
             "symptoms": "None",
             "mood": "Neutral",

@@ -1,5 +1,6 @@
 from app.models.storage_manager import StorageManager
 
+
 class SettingsViewModel:
     def __init__(self, storage: StorageManager):
         self.storage = storage

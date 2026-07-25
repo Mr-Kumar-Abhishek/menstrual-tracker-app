@@ -95,6 +95,7 @@ KV = '''
 '''
 Builder.load_string(KV)
 
+
 class LogEntryView(MDScreen):
     def __init__(self, **kwargs):
         self.today_str = date.today().isoformat()
@@ -114,7 +115,7 @@ class LogEntryView(MDScreen):
             )
             self.ids.status_label.text = "Log saved successfully!"
             self.ids.status_label.theme_text_color = "Custom"
-            self.ids.status_label.text_color = [0, 0.7, 0, 1] # Green
+            self.ids.status_label.text_color = [0, 0.7, 0, 1]  # Green
         except Exception as e:
             self.ids.status_label.text = f"Error: {str(e)}"
             self.ids.status_label.theme_text_color = "Error"

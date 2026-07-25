@@ -69,6 +69,7 @@ KV = '''
 '''
 Builder.load_string(KV)
 
+
 class DashboardView(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

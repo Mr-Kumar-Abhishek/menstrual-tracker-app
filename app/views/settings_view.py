@@ -50,12 +50,13 @@ KV = '''
 '''
 Builder.load_string(KV)
 
+
 class SettingsView(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.storage = StorageManager()
         self.viewmodel = SettingsViewModel(self.storage)
-        
+
     def on_enter(self, *args):
         self.ids.notif_switch.active = self.viewmodel.get_notifications_enabled()
 
@@ -69,7 +70,8 @@ class SettingsView(MDScreen):
         try:
             # For simplicity, we save it in the current working directory.
             # On Android, it would be better to use android platform APIs.
-            export_path = os.path.join(os.getcwd(), 'menstrual_tracker_export.json')
+            export_path = os.path.join(
+                os.getcwd(), 'menstrual_tracker_export.json')
             self.viewmodel.export_data(export_path)
             self.ids.status_label.text = f"Data exported to:\n{export_path}"
             self.ids.status_label.theme_text_color = "Custom"

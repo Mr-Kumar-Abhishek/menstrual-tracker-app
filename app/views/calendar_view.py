@@ -151,26 +151,29 @@ KV = '''
 '''
 Builder.load_string(KV)
 
+
 class CalendarView(MDScreen):
     current_year = NumericProperty(date.today().year)
     current_month = NumericProperty(date.today().month)
-    
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.storage = StorageManager()
         self.viewmodel = CalendarViewModel(self.storage)
         Clock.schedule_once(self.populate_calendar, 0.1)
-        
+
     def populate_calendar(self, *args):
         self.ids.calendar_grid.clear_widgets()
-        
+
         month_name = calendar.month_name[self.current_month]
         self.ids.month_year_label.text = f"{month_name} {self.current_year}"
-        
-        events = self.viewmodel.get_events_for_month(self.current_year, self.current_month)
-        
-        month_days = calendar.monthcalendar(self.current_year, self.current_month)
-        
+
+        events = self.viewmodel.get_events_for_month(
+            self.current_year, self.current_month)
+
+        month_days = calendar.monthcalendar(
+            self.current_year, self.current_month)
+
         for week in month_days:
             for day in week:
                 if day == 0:
@@ -181,29 +184,31 @@ class CalendarView(MDScreen):
                         size_hint=(1, 1),
                         font_style="Subtitle1"
                     )
-                    
+
                     # Check for events
-                    current_date = date(self.current_year, self.current_month, day)
+                    current_date = date(self.current_year,
+                                        self.current_month, day)
                     has_event = False
                     if current_date in events:
                         has_event = True
                         event_type = events[current_date]['type']
                         if event_type == 'period':
-                            btn.md_bg_color = [0.8, 0.2, 0.2, 1] # Red
+                            btn.md_bg_color = [0.8, 0.2, 0.2, 1]  # Red
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
                         elif event_type == 'predicted_period':
-                            btn.md_bg_color = [0.9, 0.5, 0.5, 1] # Light Pink
+                            btn.md_bg_color = [0.9, 0.5, 0.5, 1]  # Light Pink
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
                         elif event_type == 'predicted_ovulation':
-                            btn.md_bg_color = [0.2, 0.6, 0.8, 1] # Light Blue
+                            btn.md_bg_color = [0.2, 0.6, 0.8, 1]  # Light Blue
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
-                            
+
                         if events[current_date].get('has_symptoms'):
-                            btn.line_color = [0, 0.7, 0, 1] # Green outline for symptoms
-                            
+                            # Green outline for symptoms
+                            btn.line_color = [0, 0.7, 0, 1]
+
                     if current_date == date.today():
                         if not has_event:
                             from kivymd.app import MDApp
@@ -211,8 +216,9 @@ class CalendarView(MDScreen):
                             btn.theme_text_color = "Custom"
                             btn.text_color = [1, 1, 1, 1]
                         else:
-                            btn.line_color = [0, 0, 0, 1] # Black outline to highlight today if it has an event
-                    
+                            # Black outline to highlight today if it has an event
+                            btn.line_color = [0, 0, 0, 1]
+
                     self.ids.calendar_grid.add_widget(btn)
 
     def next_month(self):
@@ -230,7 +236,7 @@ class CalendarView(MDScreen):
         else:
             self.current_month -= 1
         self.populate_calendar()
-        
+
     def on_enter(self):
         # Reset to today's date when tab is opened
         self.current_year = date.today().year

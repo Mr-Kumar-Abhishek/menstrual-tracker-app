@@ -1,6 +1,5 @@
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
-from app.views.dashboard_view import DashboardView
 # We will import the other views below
 
 KV = '''
@@ -42,6 +41,7 @@ KV = '''
                 id: settings_view
 '''
 Builder.load_string(KV)
+
 
 class MainView(MDScreen):
     def __init__(self, **kwargs):
