@@ -24,3 +24,6 @@ secret.key
 # IDEs
 .vscode/
 .idea/
+build/
+dist/
+*.spec
