@@ -76,8 +76,10 @@ jobs:
         ./appimagetool-x86_64.AppImage --appimage-extract
         export PATH=$(pwd)/squashfs-root/usr/bin:$PATH
         ./squashfs-root/AppRun AppDir MenstrualTracker-x86_64.AppImage
-    - name: Generate MD5 Hashes
-      run: md5sum dist/MenstrualTracker *.deb *.rpm *.AppImage > md5sums-linux.txt
+    - name: Generate Hashes
+      run: |
+        md5sum dist/MenstrualTracker *.deb *.rpm *.AppImage > md5sums-linux.txt
+        sha256sum dist/MenstrualTracker *.deb *.rpm *.AppImage > sha256sums-linux.txt
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -88,6 +90,7 @@ jobs:
           *.rpm
           *.AppImage
           md5sums-linux.txt
+          sha256sums-linux.txt
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -98,6 +101,7 @@ jobs:
           *.rpm
           *.AppImage
           md5sums-linux.txt
+          sha256sums-linux.txt
 
   build-windows:
     needs: version
@@ -123,8 +127,10 @@ jobs:
         if (!(Test-Path dist\MenstrualTracker.exe)) { exit 1 }
         $size = (Get-Item dist\MenstrualTracker.exe).length
         if ($size -lt 1000000) { exit 1 }
-    - name: Generate MD5 Hashes
-      run: (Get-FileHash -Algorithm MD5 dist\MenstrualTracker.exe).Hash + "  dist\MenstrualTracker.exe" > md5sums-windows.txt
+    - name: Generate Hashes
+      run: |
+        (Get-FileHash -Algorithm MD5 dist\MenstrualTracker.exe).Hash + "  dist\MenstrualTracker.exe" > md5sums-windows.txt
+        (Get-FileHash -Algorithm SHA256 dist\MenstrualTracker.exe).Hash + "  dist\MenstrualTracker.exe" > sha256sums-windows.txt
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -132,6 +138,7 @@ jobs:
         path: |
           dist/MenstrualTracker.exe
           md5sums-windows.txt
+          sha256sums-windows.txt
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -139,6 +146,7 @@ jobs:
         files: |
           dist/MenstrualTracker.exe
           md5sums-windows.txt
+          sha256sums-windows.txt
 
   build-android:
     needs: version
@@ -209,8 +217,10 @@ jobs:
       run: |
         mv ${{steps.sign_app.outputs.signedReleaseFile}} bin/anonymous.menstrual.tracker.mrkumar-signed.aab
 
-    - name: Generate MD5 Hashes
-      run: md5sum bin/*.apk bin/*-signed.aab > md5sums-android.txt
+    - name: Generate Hashes
+      run: |
+        md5sum bin/*.apk bin/*-signed.aab > md5sums-android.txt
+        sha256sum bin/*.apk bin/*-signed.aab > sha256sums-android.txt
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -219,6 +229,7 @@ jobs:
           bin/*.apk
           bin/*-signed.aab
           md5sums-android.txt
+          sha256sums-android.txt
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -227,6 +238,7 @@ jobs:
           bin/*.apk
           bin/*-signed.aab
           md5sums-android.txt
+          sha256sums-android.txt
 
   build-ios:
     needs: version
@@ -255,8 +267,10 @@ jobs:
         xcodebuild archive -project menstrualtracker.xcodeproj -scheme menstrualtracker -configuration Release -archivePath menstrualtracker.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
         cd ..
         tar -czvf MenstrualTracker-iOS.xcarchive.tar.gz menstrualtracker-ios/menstrualtracker.xcarchive
-    - name: Generate MD5 Hashes
-      run: md5 -r MenstrualTracker-iOS.xcarchive.tar.gz > md5sums-ios.txt
+    - name: Generate Hashes
+      run: |
+        md5 -r MenstrualTracker-iOS.xcarchive.tar.gz > md5sums-ios.txt
+        shasum -a 256 MenstrualTracker-iOS.xcarchive.tar.gz > sha256sums-ios.txt
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -264,6 +278,7 @@ jobs:
         path: |
           MenstrualTracker-iOS.xcarchive.tar.gz
           md5sums-ios.txt
+          sha256sums-ios.txt
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -271,3 +286,4 @@ jobs:
         files: |
           MenstrualTracker-iOS.xcarchive.tar.gz
           md5sums-ios.txt
+          sha256sums-ios.txt
