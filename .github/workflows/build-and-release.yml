@@ -184,17 +184,8 @@ jobs:
         sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake gettext libltdl-dev libtool-bin
         pip install --user --upgrade buildozer cython virtualenv
 
-    - name: Build Debug APK with Buildozer
-      run: yes | ~/.local/bin/buildozer android debug
-
     - name: Build Release AAB with Buildozer
       run: yes | ~/.local/bin/buildozer android release
-
-    - name: Rename Debug APK
-      run: |
-        mkdir -p bin
-        find . -name '*-debug.apk' -exec cp {} bin/anonymous.menstrual.tracker.mrkumar-debug.apk \;
-        ls -la bin/
 
     - name: Prepare AAB for Signing
       run: |
@@ -216,19 +207,19 @@ jobs:
 
     - name: Rename Signed AAB
       run: |
+        mkdir -p bin
         mv ${{steps.sign_app.outputs.signedReleaseFile}} bin/anonymous.menstrual.tracker.mrkumar-signed.aab
 
     - name: Generate Hashes
       run: |
-        md5sum bin/*.apk bin/*-signed.aab > md5sums-android.txt
-        sha256sum bin/*.apk bin/*-signed.aab > sha256sums-android.txt
+        md5sum bin/*-signed.aab > md5sums-android.txt
+        sha256sum bin/*-signed.aab > sha256sums-android.txt
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: MenstrualTracker-Android
         path: |
-          bin/*.apk
           bin/*-signed.aab
           md5sums-android.txt
           sha256sums-android.txt
@@ -238,7 +229,6 @@ jobs:
       with:
         tag_name: ${{ needs.version.outputs.new_tag }}
         files: |
-          bin/*.apk
           bin/*-signed.aab
           md5sums-android.txt
           sha256sums-android.txt
