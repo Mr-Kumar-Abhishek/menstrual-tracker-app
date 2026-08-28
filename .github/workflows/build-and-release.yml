@@ -152,15 +152,20 @@ jobs:
 
   build-android:
     needs: version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v4
 
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
     - name: Cache Buildozer global directory
       uses: actions/cache@v4
       with:
-        path: .buildozer_global
+        path: ~/.buildozer
         key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
         restore-keys: |
           buildozer-global-${{ runner.os }}-
@@ -173,19 +178,17 @@ jobs:
         restore-keys: |
           buildozer-project-${{ runner.os }}-
 
+    - name: Install Buildozer dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake gettext libltdl-dev libtool-bin
+        pip install --user --upgrade buildozer cython virtualenv
+
     - name: Build Debug APK with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer_debug
-      with:
-        command: buildozer android debug
-        buildozer_version: stable
+      run: yes | ~/.local/bin/buildozer android debug
 
     - name: Build Release AAB with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer_release
-      with:
-        command: buildozer android release
-        buildozer_version: stable
+      run: yes | ~/.local/bin/buildozer android release
 
     - name: Rename Debug APK
       run: |
