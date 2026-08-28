@@ -24,6 +24,19 @@ secret.key
 # IDEs
 .vscode/
 .idea/
+
+# Build artifacts
 build/
 dist/
-*.spec
+MenstrualTracker.spec
+
+# Buildozer
+.buildozer/
+.buildozer_global/
+
+# Database and exports
+menstrual_tracker.db
+menstrual_tracker_export.json
+
+# PyInstaller (but NOT buildozer.spec)
+# Note: buildozer.spec is tracked intentionally
