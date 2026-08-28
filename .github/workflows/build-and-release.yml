@@ -34,6 +34,7 @@ jobs:
   build-linux:
     needs: version
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -106,6 +107,7 @@ jobs:
   build-windows:
     needs: version
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -151,58 +153,51 @@ jobs:
   build-android:
     needs: version
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+
     - name: Cache Buildozer global directory
       uses: actions/cache@v4
       with:
-        path: ~/.buildozer
-        key: buildozer-global-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+        path: .buildozer_global
+        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
         restore-keys: |
           buildozer-global-${{ runner.os }}-
+
     - name: Cache Buildozer project directory
       uses: actions/cache@v4
       with:
         path: .buildozer
-        key: buildozer-project-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+        key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
         restore-keys: |
           buildozer-project-${{ runner.os }}-
-    - name: Install Buildozer dependencies
+
+    - name: Build Debug APK with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer_debug
+      with:
+        command: buildozer android debug
+        buildozer_version: stable
+
+    - name: Build Release AAB with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer_release
+      with:
+        command: buildozer android release
+        buildozer_version: stable
+
+    - name: Rename Debug APK
       run: |
-        sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake gettext libltdl-dev libtool-bin
-        pip install --user --upgrade buildozer cython virtualenv
-    - name: Prepare requirements
-      run: |
-        pip install poetry
-        poetry export -f requirements.txt --output requirements.txt || true
-    - name: Build with Buildozer
-      run: |
-        if [ ! -f buildozer.spec ]; then ~/.local/bin/buildozer init; fi
-        sed -i 's/^title = My Application/title = MenstrualTracker/' buildozer.spec
-        sed -i 's/^package.name = myapp/package.name = mrkumar/' buildozer.spec
-        sed -i 's/^package.domain = org.test/package.domain = anonymous.menstrual.tracker/' buildozer.spec
-        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,kivymd,plyer,pycryptodome/' buildozer.spec
-        echo "android.archs = arm64-v8a" >> buildozer.spec
-        echo "android.ndk = 25b" >> buildozer.spec
-        echo "android.accept_sdk_license = True" >> buildozer.spec
-        echo "android.release_artifact = aab" >> buildozer.spec
-        yes | ~/.local/bin/buildozer android debug
-        yes | ~/.local/bin/buildozer android release
-    - name: Verify Android APK and AAB
-      run: |
-        mv bin/*-debug.apk bin/anonymous.menstrual.tracker.mrkumar-debug.apk
-        ls -l bin/*.apk
-        ls -l bin/*.aab
+        mkdir -p bin
+        find . -name '*-debug.apk' -exec cp {} bin/anonymous.menstrual.tracker.mrkumar-debug.apk \;
+        ls -la bin/
 
     - name: Prepare AAB for Signing
       run: |
         mkdir -p release_aab
-        mv bin/*-release*.aab release_aab/anonymous.menstrual.tracker.mrkumar-release-unsigned.aab
+        find . -name '*-release*.aab' -exec cp {} release_aab/anonymous.menstrual.tracker.mrkumar-release-unsigned.aab \;
+        ls -la release_aab/
 
     - name: Sign Android Release
       uses: r0adkll/sign-android-release@v1
@@ -213,6 +208,8 @@ jobs:
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
+      env:
+        BUILD_TOOLS_VERSION: "34.0.0"
 
     - name: Rename Signed AAB
       run: |
@@ -222,6 +219,7 @@ jobs:
       run: |
         md5sum bin/*.apk bin/*-signed.aab > md5sums-android.txt
         sha256sum bin/*.apk bin/*-signed.aab > sha256sums-android.txt
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -231,6 +229,7 @@ jobs:
           bin/*-signed.aab
           md5sums-android.txt
           sha256sums-android.txt
+
     - name: Upload to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -244,6 +243,9 @@ jobs:
   build-ios:
     needs: version
     runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_REQUIRE_TAP_TRUST: "1"
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
