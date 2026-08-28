@@ -184,12 +184,14 @@ jobs:
         sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake gettext libltdl-dev libtool-bin
         pip install --user --upgrade buildozer cython virtualenv
 
-    - name: Pre-download freetype (Savannah 502 workaround)
+    - name: Pre-download and extract freetype (Savannah 502 workaround)
       run: |
-        mkdir -p ~/.buildozer/android/packages/freetype
-        wget -O ~/.buildozer/android/packages/freetype/freetype-2.14.1.tar.gz https://mirror.csclub.uwaterloo.ca/nongnu/freetype/freetype-2.14.1.tar.gz
+        wget -O freetype-2.14.1.tar.gz https://mirror.csclub.uwaterloo.ca/nongnu/freetype/freetype-2.14.1.tar.gz
+        tar -xzf freetype-2.14.1.tar.gz
 
     - name: Build Release AAB with Buildozer
+      env:
+        P4A_freetype_DIR: ${{ github.workspace }}/freetype-2.14.1
       run: yes | ~/.local/bin/buildozer android release
 
     - name: Prepare AAB for Signing
