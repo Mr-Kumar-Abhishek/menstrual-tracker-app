@@ -181,9 +181,6 @@ jobs:
       with:
         path: .buildozer
         key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          buildozer-project-${{ runner.os }}-
-
     - name: Install Buildozer dependencies
       run: |
         sudo apt update
