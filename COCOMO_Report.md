@@ -3,7 +3,7 @@
 This document outlines the Constructive Cost Model (COCOMO) estimations for the MenstrualTracker App across all three development modes: **Organic**, **Semi-Detached**, and **Embedded**.
 
 ## 1. Estimated Lines of Code (LOC)
-- **Estimated Size:** ~1,556 Lines of Code (1.56 KLOC)
+- **Estimated Size:** ~1,909 Lines of Code (1.91 KLOC)
 *(Note: This is the actual counted size of the core application Python and KV files, excluding virtual environments and external dependencies).*
 
 ## 2. Basic COCOMO Constants
@@ -27,36 +27,36 @@ Formulas:
 ### 3.1 Organic Mode
 *Appropriate for small teams, familiar environments, and well-understood requirements.*
 
-- **Effort:** 2.4 * (1.56)^1.05 ≈ **3.82 Person-Months**
-- **Time:** 2.5 * (3.82)^0.38 ≈ **4.16 Months**
-- **Staffing:** 3.82 / 4.16 ≈ **1 Developer**
-- **Cost (USD):** 3.82 * $10,000 = **$38,200**
-- **Cost (INR):** $38,200 * ₹83.50 ≈ **₹31,89,700**
+- **Effort:** 2.4 * (1.91)^1.05 ≈ **4.77 Person-Months**
+- **Time:** 2.5 * (4.77)^0.38 ≈ **4.53 Months**
+- **Staffing:** 4.77 / 4.53 ≈ **1 Developer**
+- **Cost (USD):** 4.77 * $10,000 = **$47,700**
+- **Cost (INR):** $47,700 * ₹83.50 ≈ **₹39,82,950**
 
 ### 3.2 Semi-Detached Mode
 *Appropriate for medium-sized teams, mixed experience levels, and somewhat rigid requirements.*
 
-- **Effort:** 3.0 * (1.56)^1.12 ≈ **4.92 Person-Months**
-- **Time:** 2.5 * (4.92)^0.35 ≈ **4.37 Months**
-- **Staffing:** 4.92 / 4.37 ≈ **1-2 Developers**
-- **Cost (USD):** 4.92 * $10,000 = **$49,200**
-- **Cost (INR):** $49,200 * ₹83.50 ≈ **₹41,08,200**
+- **Effort:** 3.0 * (1.91)^1.12 ≈ **6.19 Person-Months**
+- **Time:** 2.5 * (6.19)^0.35 ≈ **4.73 Months**
+- **Staffing:** 6.19 / 4.73 ≈ **1-2 Developers**
+- **Cost (USD):** 6.19 * $10,000 = **$61,900**
+- **Cost (INR):** $61,900 * ₹83.50 ≈ **₹51,68,650**
 
 ### 3.3 Embedded Mode
 *Appropriate for complex projects with strict constraints, rigid requirements, and specialized hardware/software.*
 
-- **Effort:** 3.6 * (1.56)^1.20 ≈ **6.12 Person-Months**
-- **Time:** 2.5 * (6.12)^0.32 ≈ **4.46 Months**
-- **Staffing:** 6.12 / 4.46 ≈ **1-2 Developers**
-- **Cost (USD):** 6.12 * $10,000 = **$61,200**
-- **Cost (INR):** $61,200 * ₹83.50 ≈ **₹51,10,200**
+- **Effort:** 3.6 * (1.91)^1.20 ≈ **7.79 Person-Months**
+- **Time:** 2.5 * (7.79)^0.32 ≈ **4.76 Months**
+- **Staffing:** 7.79 / 4.76 ≈ **1-2 Developers**
+- **Cost (USD):** 7.79 * $10,000 = **$77,900**
+- **Cost (INR):** $77,900 * ₹83.50 ≈ **₹65,04,650**
 
 ## 4. Summary & Conclusion
 
 | Mode | Effort (Person-Months) | Time (Months) | Staffing | Cost (USD) | Cost (INR) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Organic** | 3.82 | 4.16 | 1 Developer | $38,200 | ₹31,89,700 |
-| **Semi-Detached** | 4.92 | 4.37 | 1-2 Developers | $49,200 | ₹41,08,200 |
-| **Embedded** | 6.12 | 4.46 | 1-2 Developers | $61,200 | ₹51,10,200 |
+| **Organic** | 4.77 | 4.53 | 1 Developer | $47,700 | ₹39,82,950 |
+| **Semi-Detached** | 6.19 | 4.73 | 1-2 Developers | $61,900 | ₹51,68,650 |
+| **Embedded** | 7.79 | 4.76 | 1-2 Developers | $77,900 | ₹65,04,650 |
 
-Based on the actual size of the codebase (~1.56 KLOC) and USA developer market rates, the MenstrualTracker App most closely aligns with the **Organic** model, requiring approximately **4 months** for a **solo developer**, at an estimated cost of **$38,200 USD (₹31.9 Lakhs)**. Scaling it to an **Embedded** model (e.g., rigid compliance, proprietary systems) would increase the required effort to just over **6 Person-Months**, raising the cost to **$61,200 USD (₹51.1 Lakhs)**.
+Based on the actual size of the codebase (~1.91 KLOC) and USA developer market rates, the MenstrualTracker App most closely aligns with the **Organic** model, requiring approximately **4.5 months** for a **solo developer**, at an estimated cost of **$47,700 USD (₹39.8 Lakhs)**. Scaling it to an **Embedded** model (e.g., rigid compliance, proprietary systems) would increase the required effort to just over **7.8 Person-Months**, raising the cost to **$77,900 USD (₹65 Lakhs)**.
