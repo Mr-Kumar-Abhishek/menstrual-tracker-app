@@ -28,7 +28,7 @@ source.exclude_patterns = *.pyc,*_log*.txt,*.db,*.key,*.spec
 version = 0.1.1
 
 # (numeric) Application version code (method 2)
-android.numeric_version = 3
+android.numeric_version = 4
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
@@ -51,7 +51,7 @@ orientation = portrait
 fullscreen = 0
 
 # (int) Target Android API, should be as high as possible.
-android.api = 33
+android.api = 35
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 24
