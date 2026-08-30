@@ -66,6 +66,17 @@ buildozer android debug
 - **Notifications**: Cross-platform system notifications via `plyer`.
 - **Project Estimation**: See the [COCOMO Cost Estimation Report](COCOMO_Report.md) for detailed effort and USA-adjusted cost estimations.
 
+## 📊 Project Estimation (COCOMO)
+
+Based on the actual size of the codebase (~1.91 KLOC), the MenstrualTracker App most closely aligns with the **Organic** COCOMO model.
+
+- **Estimated Effort:** 4.77 Person-Months
+- **Development Time:** 4.53 Months
+- **Required Staffing:** 1 Developer
+- **Estimated Cost:** $47,700 USD (~₹39.8 Lakhs)
+
+See the full [COCOMO Cost Estimation Report](COCOMO_Report.md) for detailed calculations across different development models.
+
 ## 📜 License
 
 This project is dual-licensed:
