@@ -26,4 +26,4 @@ Overall, the project is highly compliant with the specified requirements. Below 
 
 > [!TIP]
 > NFR2 (Performance) is verified through the automated test suite (`tests/test_performance.py`), ensuring that core calculations and imports remain fast enough for a responsive UI.
-> NFR3 (Portability & Modern Android Support) is compliant with target Android **API Level 36** (`android.api = 36`), 16 KB memory page size alignment (`p4a.extra_args`), and Play Store versioning standards (`android.numeric_version` set > 400).
+> NFR3 (Portability & Modern Android Support) is compliant with target Android **API Level 36** (`android.api = 36`), 16 KB memory page size alignment (`LDFLAGS="-Wl,-z,max-page-size=16384"`), and Play Store versioning standards (`android.numeric_version` set > 400).
