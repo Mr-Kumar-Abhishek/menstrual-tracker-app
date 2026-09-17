@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.tag_version.outputs.new_tag }}
+      new_version: ${{ steps.tag_version.outputs.new_version }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
@@ -62,8 +63,8 @@ jobs:
       run: |
         mkdir -p package/usr/local/bin
         cp dist/MenstrualTracker package/usr/local/bin/menstrual-tracker
-        fpm -s dir -t deb -n menstrual-tracker -v ${{ needs.version.outputs.new_tag || '1.0.0' }} -C package .
-        fpm -s dir -t rpm -n menstrual-tracker -v ${{ needs.version.outputs.new_tag || '1.0.0' }} -C package .
+        fpm -s dir -t deb -n menstrual-tracker -v ${{ needs.version.outputs.new_version || '1.0.0' }} -C package .
+        fpm -s dir -t rpm -n menstrual-tracker -v ${{ needs.version.outputs.new_version || '1.0.0' }} -C package .
     - name: Build AppImage
       run: |
         mkdir -p AppDir/usr/bin
@@ -191,6 +192,11 @@ jobs:
       run: |
         wget -O freetype-2.14.1.tar.gz https://mirror.csclub.uwaterloo.ca/nongnu/freetype/freetype-2.14.1.tar.gz
         tar -xzf freetype-2.14.1.tar.gz
+
+    - name: Update version and version code
+      run: |
+        sed -i 's/^version = .*/version = ${{ needs.version.outputs.new_version }}/' buildozer.spec
+        sed -i 's/^android.numeric_version = .*/android.numeric_version = ${{ github.run_number }}/' buildozer.spec
 
     - name: Build Release AAB with Buildozer
       env:
