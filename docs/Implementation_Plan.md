@@ -51,7 +51,7 @@ This project will be developed using **Agile methodologies** combined with a **T
 - **Tasks:**
   - **Android Target API Upgrade:** Updated target SDK to **API Level 36** (`android.api = 36`) in `buildozer.spec` to ensure compatibility with modern Android runtime requirements.
   - **16 KB Memory Page Size Support:** Configured linker flags (`-Wl,-z,max-page-size=16384`) in `buildozer.spec` (`p4a.extra_args`) and CI/CD (`LDFLAGS`) to ensure native `.so` binaries align with Android 15/16 16 KB page size standards.
-  - **Play Store Version Code Management:** Configured baseline numeric version code to **301** in `buildozer.spec` and automated CI/CD version code incrementing as `300 + ${{ github.run_number }}` in `build-and-release.yml`.
+  - **Play Store Version Code Management:** Configured baseline numeric version code to **401** in `buildozer.spec` and automated CI/CD version code incrementing as `400 + ${{ github.run_number }}` in `build-and-release.yml`.
   - **Data Security:** Implemented transparent field-level AES-128 Fernet encryption (`crypto_manager.py`) for sensitive logs stored locally in SQLite.
   - **Storage Resilience:** Added a shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`) to handle read-only filesystems without app freezes.
   - **CI/CD Pipeline Refinement:** Consolidated release workflows into `build-and-release.yml` with automated semver tag creation, release notes, and multi-platform binary signing.
@@ -59,7 +59,7 @@ This project will be developed using **Agile methodologies** combined with a **T
 ### 3. Continuous Integration / Continuous Deployment (CI/CD) Strategy
 GitHub Actions is utilized to automate test and release pipelines:
 1. **`test.yml`**: Triggers on push and pull requests. Runs Python `pytest` suite and `flake8` linting.
-2. **`build-and-release.yml`**: Triggers on pushes to `main`/`master`. Packages and releases binaries for Windows (`.exe`), Linux (`.deb`, `.rpm`, `.AppImage`), Android (`.aab` signed), and iOS (`.xcarchive`). Increments version tag and sets `android.numeric_version` > 300 dynamically.
+2. **`build-and-release.yml`**: Triggers on pushes to `main`/`master`. Packages and releases binaries for Windows (`.exe`), Linux (`.deb`, `.rpm`, `.AppImage`), Android (`.aab` signed), and iOS (`.xcarchive`). Increments version tag and sets `android.numeric_version` > 400 dynamically.
 
 ### 4. Testing Strategy
 - **Unit Tests (`pytest`):** Core logic (predictions, math), Database queries, and ViewModel state management.
