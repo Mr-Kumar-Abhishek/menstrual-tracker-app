@@ -21,9 +21,9 @@ Overall, the project is highly compliant with the specified requirements. Below 
 | :--- | :---: | :--- |
 | **NFR1: Privacy & Security** | ✅ Compliant | All data is stored locally in an SQLite database. Furthermore, sensitive health data (symptoms, mood, notes) is encrypted using AES-256 (via `crypto_manager.py`). No cloud syncing is present. |
 | **NFR2: Performance** | ✅ Compliant | Automated performance tests (`test_performance.py`) ensure core imports and prediction engine calculations run under 1 second, guaranteeing a sub-3-second launch time. |
-| **NFR3: Portability** | ✅ Compliant | Built with Python 3 and Kivy/KivyMD, fulfilling cross-platform (Windows, Linux, Android, iOS) needs with a single codebase. Configured for **Android Target API Level 36** with automated version code calculation (`> 300`) in GitHub Actions CI/CD (`build-and-release.yml`). |
+| **NFR3: Portability** | ✅ Compliant | Built with Python 3 and Kivy/KivyMD, fulfilling cross-platform (Windows, Linux, Android, iOS) needs with a single codebase. Configured for **Android Target API Level 36**, 16 KB memory page size alignment (`-Wl,-z,max-page-size=16384`), and automated version code calculation (`> 300`) in GitHub Actions CI/CD (`build-and-release.yml`). |
 | **NFR4: Usability** | ✅ Compliant | Leverages Material Design (`KivyMD`) for an intuitive UI, minimizing the learning curve for users without the need for extensive tutorials. |
 
 > [!TIP]
 > NFR2 (Performance) is verified through the automated test suite (`tests/test_performance.py`), ensuring that core calculations and imports remain fast enough for a responsive UI.
-> NFR3 (Portability & Modern Android Support) is compliant with target Android **API Level 36** (`android.api = 36`) and Play Store versioning standards (`android.numeric_version` set > 300).
+> NFR3 (Portability & Modern Android Support) is compliant with target Android **API Level 36** (`android.api = 36`), 16 KB memory page size alignment (`p4a.extra_args`), and Play Store versioning standards (`android.numeric_version` set > 300).

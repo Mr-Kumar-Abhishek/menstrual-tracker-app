@@ -50,6 +50,7 @@ This project will be developed using **Agile methodologies** combined with a **T
 - **Goal:** Upgrade target Android API level, establish Play Store versioning standards, enhance encryption, and harden local storage resilience.
 - **Tasks:**
   - **Android Target API Upgrade:** Updated target SDK to **API Level 36** (`android.api = 36`) in `buildozer.spec` to ensure compatibility with modern Android runtime requirements.
+  - **16 KB Memory Page Size Support:** Configured linker flags (`-Wl,-z,max-page-size=16384`) in `buildozer.spec` (`p4a.extra_args`) and CI/CD (`LDFLAGS`) to ensure native `.so` binaries align with Android 15/16 16 KB page size standards.
   - **Play Store Version Code Management:** Configured baseline numeric version code to **301** in `buildozer.spec` and automated CI/CD version code incrementing as `300 + ${{ github.run_number }}` in `build-and-release.yml`.
   - **Data Security:** Implemented transparent field-level AES-128 Fernet encryption (`crypto_manager.py`) for sensitive logs stored locally in SQLite.
   - **Storage Resilience:** Added a shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`) to handle read-only filesystems without app freezes.

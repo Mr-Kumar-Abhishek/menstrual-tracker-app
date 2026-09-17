@@ -74,6 +74,9 @@ android.accept_sdk_license = True
 # (str) Android release artifact type (aab or apk)
 android.release_artifact = aab
 
+# (str) Extra arguments to pass to python-for-android (enable 16KB memory page size alignment)
+p4a.extra_args = --extra-ldflags="-Wl,-z,max-page-size=16384"
+
 # (str) The format used to log messages. See python logging module documentation for details
 #log_level = 2
 
