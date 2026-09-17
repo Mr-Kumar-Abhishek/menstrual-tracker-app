@@ -13,7 +13,7 @@ The application will follow a **Model-View-ViewModel (MVVM)** architecture to en
 - **UI Framework:** Kivy & KivyMD (for Material Design components).
 - **Local Storage:** SQLite3 with AES-128 Fernet encryption (`crypto_manager.py`) and shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`).
 - **Platform Features (Notifications):** Plyer (Python library for accessing hardware features/APIs across platforms).
-- **Build & Packaging Tools:** PyInstaller (Windows `.exe`, Linux binaries), Buildozer (Android `.aab` targeting **API Level 36** with dynamic version code > 200), Toolchain (`kivy-ios` for iOS `.xcarchive`).
+- **Build & Packaging Tools:** PyInstaller (Windows `.exe`, Linux binaries), Buildozer (Android `.aab` targeting **API Level 36** with dynamic version code > 300), Toolchain (`kivy-ios` for iOS `.xcarchive`).
 
 ### 3. Database Schema
 A local SQLite database will be used with the following core tables:
