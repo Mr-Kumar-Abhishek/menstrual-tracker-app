@@ -14,7 +14,7 @@ Users need a reliable, privacy-focused, and easy-to-use tool to track their mens
 
 **2.2 Operating Environment**
 - **Desktop:** Windows 10/11, Linux (Ubuntu/Debian-based).
-- **Mobile:** Android 8.0 and above.
+- **Mobile:** Android 8.0 and above (Target API Level 36 / Android 16).
 - **Framework:** Python 3.10+, Kivy.
 
 ### 3. Functional Requirements

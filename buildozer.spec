@@ -28,7 +28,7 @@ source.exclude_patterns = *.pyc,*_log*.txt,*.db,*.key,*.spec
 version = 0.1.1
 
 # (numeric) Application version code (method 2)
-android.numeric_version = 5
+android.numeric_version = 201
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy

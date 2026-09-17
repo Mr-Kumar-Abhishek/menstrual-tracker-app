@@ -196,7 +196,8 @@ jobs:
     - name: Update version and version code
       run: |
         sed -i 's/^version = .*/version = ${{ needs.version.outputs.new_version }}/' buildozer.spec
-        sed -i 's/^android.numeric_version = .*/android.numeric_version = ${{ github.run_number }}/' buildozer.spec
+        VERSION_CODE=$((200 + ${{ github.run_number }}))
+        sed -i "s/^android.numeric_version = .*/android.numeric_version = $VERSION_CODE/" buildozer.spec
 
     - name: Build Release AAB with Buildozer
       env:
