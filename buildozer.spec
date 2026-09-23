@@ -25,10 +25,10 @@ source.exclude_dirs = tests,bin,.buildozer,.github,docs,playstore_assets,build,d
 source.exclude_patterns = *.pyc,*_log*.txt,*.db,*.key,*.spec
 
 # (str) Application versioning
-version = 0.1.1
+version = 0.1.2
 
 # (numeric) Application version code (method 2)
-android.numeric_version = 401
+android.numeric_version = 402
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
@@ -38,7 +38,7 @@ requirements = python3,kivy==2.3.1,kivymd==1.1.1,plyer,pycryptodome,pillow
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = %(source.dir)s/icon.jpg
 
 # (list) Supported orientations
 orientation = portrait
