@@ -1,6 +1,10 @@
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
-# We will import the other views below
+# Import all child views so KV lang can resolve them
+from app.views.dashboard_view import DashboardView  # noqa: F401
+from app.views.calendar_view import CalendarView    # noqa: F401
+from app.views.log_view import LogEntryView         # noqa: F401
+from app.views.settings_view import SettingsView    # noqa: F401
 
 KV = '''
 <MainView>:
