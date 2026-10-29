@@ -1,9 +1,12 @@
 import os
+from kivy.clock import Clock
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from app.views.main_view import MainView
 from app.models.notification_manager import NotificationManager
 from app.models.storage_manager import StorageManager
+
+Clock.max_iteration = 60
 
 
 class MenstrualTrackerApp(MDApp):

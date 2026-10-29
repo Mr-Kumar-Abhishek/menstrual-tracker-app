@@ -2,6 +2,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import NumericProperty
 from kivy.clock import Clock
 from app.models.storage_manager import StorageManager
@@ -14,24 +15,25 @@ KV = '''
     MDBoxLayout:
         orientation: 'vertical'
         padding: "10dp"
-        spacing: "10dp"
+        spacing: "8dp"
+        md_bg_color: app.theme_cls.bg_normal
 
         # Header
         MDBoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
             height: "48dp"
-            
+
             MDIconButton:
                 icon: "chevron-left"
                 on_release: root.prev_month()
-                
+
             MDLabel:
                 id: month_year_label
                 text: "Month Year"
                 halign: "center"
                 font_style: "H6"
-                
+
             MDIconButton:
                 icon: "chevron-right"
                 on_release: root.next_month()
@@ -40,13 +42,14 @@ KV = '''
         MDBoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
-            height: "30dp"
-            spacing: "5dp"
-            
+            height: "28dp"
+            spacing: "6dp"
+
             # Period Legend
             Widget:
-                size_hint_x: None
-                width: "20dp"
+                size_hint: None, None
+                size: "14dp", "14dp"
+                pos_hint: {"center_y": 0.5}
                 canvas:
                     Color:
                         rgba: 0.8, 0.2, 0.2, 1
@@ -56,11 +59,17 @@ KV = '''
             MDLabel:
                 text: "Period"
                 font_style: "Caption"
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
+
+            Widget:
+                size_hint_x: 1
 
             # Predicted Period
             Widget:
-                size_hint_x: None
-                width: "20dp"
+                size_hint: None, None
+                size: "14dp", "14dp"
+                pos_hint: {"center_y": 0.5}
                 canvas:
                     Color:
                         rgba: 0.9, 0.5, 0.5, 1
@@ -70,11 +79,17 @@ KV = '''
             MDLabel:
                 text: "Predicted"
                 font_style: "Caption"
-                
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
+
+            Widget:
+                size_hint_x: 1
+
             # Predicted Ovulation
             Widget:
-                size_hint_x: None
-                width: "20dp"
+                size_hint: None, None
+                size: "14dp", "14dp"
+                pos_hint: {"center_y": 0.5}
                 canvas:
                     Color:
                         rgba: 0.2, 0.6, 0.8, 1
@@ -84,27 +99,35 @@ KV = '''
             MDLabel:
                 text: "Ovulation"
                 font_style: "Caption"
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
+
+            Widget:
+                size_hint_x: 1
 
             # Symptoms Logged
             Widget:
-                size_hint_x: None
-                width: "20dp"
+                size_hint: None, None
+                size: "14dp", "14dp"
+                pos_hint: {"center_y": 0.5}
                 canvas:
                     Color:
-                        rgba: 0, 0.7, 0, 1 # Green
+                        rgba: 0, 0.7, 0, 1
                     Line:
                         rectangle: (self.x, self.y, self.width, self.height)
                         width: 1.5
             MDLabel:
                 text: "Symptoms"
                 font_style: "Caption"
+                adaptive_width: True
+                pos_hint: {"center_y": 0.5}
 
         # Days of Week Header
         MDGridLayout:
             cols: 7
             size_hint_y: None
-            height: "40dp"
-            
+            height: "32dp"
+
             MDLabel:
                 text: "Mon"
                 halign: "center"
@@ -145,9 +168,8 @@ KV = '''
         MDGridLayout:
             id: calendar_grid
             cols: 7
-            spacing: "2dp"
+            spacing: "4dp"
             padding: "2dp"
-            
 '''
 Builder.load_string(KV)
 
@@ -160,7 +182,7 @@ class CalendarView(MDScreen):
         super().__init__(**kwargs)
         self.storage = StorageManager()
         self.viewmodel = CalendarViewModel(self.storage)
-        Clock.schedule_once(self.populate_calendar, 0.1)
+        Clock.schedule_once(self.populate_calendar, 0)
 
     def populate_calendar(self, *args):
         self.ids.calendar_grid.clear_widgets()
@@ -182,7 +204,10 @@ class CalendarView(MDScreen):
                     btn = MDFlatButton(
                         text=str(day),
                         size_hint=(1, 1),
-                        font_style="Subtitle1"
+                        font_style="Subtitle1",
+                        _min_width=0,
+                        _min_height=0,
+                        padding=(dp(2), dp(2)),
                     )
 
                     # Check for events
@@ -237,7 +262,7 @@ class CalendarView(MDScreen):
             self.current_month -= 1
         self.populate_calendar()
 
-    def on_enter(self):
+    def on_enter(self, *args):
         # Reset to today's date when tab is opened
         self.current_year = date.today().year
         self.current_month = date.today().month

@@ -10,10 +10,12 @@ KV = '''
         orientation: 'vertical'
         padding: "20dp"
         spacing: "20dp"
+        md_bg_color: app.theme_cls.bg_normal
 
         MDLabel:
             text: "Settings"
-            font_style: "H4"
+            font_style: "H5"
+            bold: True
             halign: "center"
             size_hint_y: None
             height: self.texture_size[1]
@@ -22,6 +24,7 @@ KV = '''
             orientation: 'horizontal'
             size_hint_y: None
             height: "48dp"
+            padding: "4dp", 0, "16dp", 0
 
             MDLabel:
                 text: "Enable Notifications"

@@ -10,6 +10,7 @@ from app.views.calendar_view import CalendarView
 from app.views.dashboard_view import DashboardView
 from app.views.settings_view import SettingsView
 from app.views.log_view import LogEntryView
+from app.views.main_view import MainView, InstantTabTransition
 from main import MenstrualTrackerApp
 import pytest
 from kivy.config import Config
@@ -135,3 +136,19 @@ def test_calendar_view_ui():
     assert view.ids.month_year_label.text != ""
     # Ensure calendar grid is populated with days
     assert len(view.ids.calendar_grid.children) > 0
+    # Ensure day buttons do not enforce KivyMD's 64dp minimum width (prevents 7-col overflow on mobile)
+    day_buttons = [w for w in view.ids.calendar_grid.children if hasattr(w, "_min_width")]
+    assert len(day_buttons) > 0
+    assert all(btn._min_width == 0 for btn in day_buttons)
+
+
+def test_main_view_rendering_and_tab_transitions():
+    mv = MainView()
+    assert mv.ids.bottom_nav.transition is InstantTabTransition
+    assert isinstance(mv.ids.bottom_nav.ids.tab_manager.transition, InstantTabTransition)
+    assert mv.ids.dashboard_view.ids.current_cycle_label.text != ""
+    for tab_name in ("screen_calendar", "screen_log", "screen_settings", "screen_dashboard"):
+        mv.ids.bottom_nav.switch_tab(tab_name)
+        assert mv.ids.bottom_nav.ids.tab_manager.current == tab_name
+        assert isinstance(mv.ids.bottom_nav.ids.tab_manager.transition, InstantTabTransition)
+

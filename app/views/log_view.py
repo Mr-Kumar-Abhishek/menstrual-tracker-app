@@ -9,11 +9,13 @@ KV = '''
     MDBoxLayout:
         orientation: 'vertical'
         padding: "20dp"
-        spacing: "15dp"
+        spacing: "12dp"
+        md_bg_color: app.theme_cls.bg_normal
 
         MDLabel:
             text: "Log Symptoms & Cycle"
-            font_style: "H4"
+            font_style: "H5"
+            bold: True
             halign: "center"
             size_hint_y: None
             height: self.texture_size[1]
@@ -27,13 +29,15 @@ KV = '''
         MDLabel:
             text: "Flow Intensity"
             font_style: "Caption"
+            size_hint_y: None
+            height: self.texture_size[1]
 
         Spinner:
             id: flow_field
             text: "Medium"
             values: ["Light", "Medium", "Heavy"]
             size_hint_y: None
-            height: "48dp"
+            height: "44dp"
             background_color: app.theme_cls.primary_color
 
         MDTextField:
@@ -45,13 +49,15 @@ KV = '''
         MDLabel:
             text: "Mood"
             font_style: "Caption"
+            size_hint_y: None
+            height: self.texture_size[1]
 
         Spinner:
             id: mood_field
             text: "Neutral"
             values: ["Happy", "Sad", "Irritable", "Anxious", "Neutral", "Mood Swings"]
             size_hint_y: None
-            height: "48dp"
+            height: "44dp"
             background_color: app.theme_cls.primary_color
 
         MDTextField:
@@ -60,15 +66,16 @@ KV = '''
             mode: "rectangle"
             multiline: True
             size_hint_y: None
-            height: "80dp"
+            height: "72dp"
 
         MDBoxLayout:
             orientation: "horizontal"
             spacing: "10dp"
+            adaptive_width: True
             size_hint_y: None
             height: "48dp"
             pos_hint: {"center_x": .5}
-            
+
             MDRaisedButton:
                 text: "Save Log"
                 on_release: root.save_log()
@@ -77,7 +84,7 @@ KV = '''
                 text: "Start Period"
                 md_bg_color: 0.8, 0.2, 0.2, 1
                 on_release: root.start_period()
-                
+
             MDRaisedButton:
                 text: "End Period"
                 md_bg_color: 0.5, 0.5, 0.5, 1

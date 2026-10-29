@@ -182,6 +182,8 @@ jobs:
       with:
         path: .buildozer
         key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'icon.png') }}
+        restore-keys: |
+          buildozer-project-${{ runner.os }}-
     - name: Install Buildozer dependencies
       run: |
         sudo apt update
@@ -195,7 +197,10 @@ jobs:
 
     - name: Update version and version code
       run: |
-        sed -i 's/^version = .*/version = ${{ needs.version.outputs.new_version }}/' buildozer.spec
+        NEW_VER="${{ needs.version.outputs.new_version }}"
+        if [ -n "$NEW_VER" ]; then
+          sed -i "s/^version = .*/version = $NEW_VER/" buildozer.spec
+        fi
         VERSION_CODE=$((400 + ${{ github.run_number }}))
         sed -i "s/^android.numeric_version = .*/android.numeric_version = $VERSION_CODE/" buildozer.spec
 

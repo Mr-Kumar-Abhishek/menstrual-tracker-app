@@ -1,6 +1,7 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.button import MDFlatButton  # noqa: F401
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.metrics import dp
 from app.viewmodels.dashboard_viewmodel import DashboardViewModel
 from app.models.storage_manager import StorageManager
@@ -262,11 +263,14 @@ class DashboardView(MDScreen):
         self.storage = StorageManager()
         self.storage.initialize_database()
         self.viewmodel = DashboardViewModel(self.storage)
+        Clock.schedule_once(lambda dt: self._refresh(), 0)
 
     def on_enter(self, *args):
         self._refresh()
 
     def _refresh(self):
+        if "empty_state" not in self.ids:
+            return
         cycles = self.storage.get_all_cycles()
         has_data = bool(cycles)
 
