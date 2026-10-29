@@ -1,4 +1,5 @@
 import os
+import shutil
 import logging
 import base64
 from Crypto.Cipher import AES
@@ -19,13 +20,25 @@ class CryptoManager:
             from kivy.app import App
             app = App.get_running_app()
             if app and app.user_data_dir:
-                return os.path.join(app.user_data_dir, path)
+                os.makedirs(app.user_data_dir, exist_ok=True)
+                target_path = os.path.join(app.user_data_dir, path)
+                if not os.path.exists(target_path):
+                    base_dir = os.path.abspath(
+                        os.path.join(os.path.dirname(__file__), "..", "..")
+                    )
+                    bundled_key = os.path.join(base_dir, os.path.basename(path))
+                    if os.path.exists(bundled_key) and os.path.getsize(bundled_key) == 32:
+                        shutil.copy2(bundled_key, target_path)
+                return target_path
         except Exception:
             pass
         return path
 
     def _initialize_key(self):
         try:
+            key_dir = os.path.dirname(self.key_path)
+            if key_dir:
+                os.makedirs(key_dir, exist_ok=True)
             if not os.path.exists(self.key_path):
                 key = get_random_bytes(32)  # AES-256
                 with open(self.key_path, "wb") as key_file:

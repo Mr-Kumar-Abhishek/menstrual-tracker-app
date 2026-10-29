@@ -18,10 +18,12 @@ class MenstrualTrackerApp(MDApp):
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.theme_style = "Light"
 
-        # Check and send any pending notifications
+        # Initialize encrypted database and check pending notifications
         try:
             storage = StorageManager()
             storage.initialize_database()
+            if not storage.get_all_cycles():
+                storage.seed_sample_data()
             if storage.get_setting('notifications_enabled', 'True') == 'True':
                 NotificationManager().check_and_send_reminders()
         except Exception as e:

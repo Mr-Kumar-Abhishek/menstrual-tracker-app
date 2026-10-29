@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import tempfile
 from kivy.metrics import Metrics
 from kivy.core.window import Window
@@ -27,7 +28,12 @@ Metrics.dpi = 96
 def kivy_app():
     # Create the app instance so theme_cls is available for views
     app = MenstrualTrackerApp()
-    return app
+    yield app
+    # Restore clean encrypted sample data in default DB and export file after UI tests
+    sm = StorageManager()
+    sm.seed_sample_data()
+    sm.set_setting("notifications_enabled", "True")
+    sm.export_data("menstrual_tracker_export.json")
 
 
 def test_log_entry_view_ui():
@@ -53,6 +59,8 @@ def test_log_entry_view_ui():
 def test_settings_view_ui():
     view = SettingsView()
     view.storage.initialize_database()
+    view.storage.set_setting("notifications_enabled", "True")
+    view.ids.notif_switch.active = True
 
     # Viewmodel and UI sync test
     assert view.ids.notif_switch.active is True
@@ -92,6 +100,17 @@ def test_load_sample_data_ui():
         assert view.ids.current_cycle_label.text == "Day 10"
         assert len(view.storage.get_all_cycles()) == 3
         assert len(view.storage.get_all_daily_logs()) == 4
+
+        # Verify raw SQLite rows are encrypted with AES256GCM$
+        conn = sqlite3.connect(tmp_db)
+        cur = conn.cursor()
+        cur.execute("SELECT flow_intensity, symptoms, mood, notes FROM daily_logs")
+        rows = cur.fetchall()
+        conn.close()
+        assert len(rows) == 4
+        for row in rows:
+            for col in row:
+                assert col.startswith("AES256GCM$")
     finally:
         if os.path.exists(tmp_db):
             os.unlink(tmp_db)

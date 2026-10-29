@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import shutil
 import logging
 from datetime import date, timedelta
 from app.models.crypto_manager import CryptoManager
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 class StorageManager:
     def __init__(self, db_path="menstrual_tracker.db", key_path="secret.key"):
         self.db_path = db_path
+        self.key_path = key_path
         self._fallback_active = False
         self._fallback_conn = None
         self.crypto = CryptoManager(key_path)
@@ -24,7 +26,23 @@ class StorageManager:
             from kivy.app import App
             app = App.get_running_app()
             if app and app.user_data_dir:
-                return os.path.join(app.user_data_dir, self.db_path)
+                os.makedirs(app.user_data_dir, exist_ok=True)
+                target_path = os.path.join(app.user_data_dir, self.db_path)
+                if not os.path.exists(target_path):
+                    base_dir = os.path.abspath(
+                        os.path.join(os.path.dirname(__file__), "..", "..")
+                    )
+                    bundled_db = os.path.join(base_dir, os.path.basename(self.db_path))
+                    bundled_key = os.path.join(base_dir, os.path.basename(self.key_path))
+                    if os.path.exists(bundled_db):
+                        if os.path.exists(bundled_key) and os.path.getsize(bundled_key) == 32:
+                            target_key = os.path.join(
+                                app.user_data_dir, os.path.basename(self.key_path)
+                            )
+                            shutil.copy2(bundled_key, target_key)
+                            self.crypto = CryptoManager(self.key_path)
+                        shutil.copy2(bundled_db, target_path)
+                return target_path
         except Exception:
             pass
 
@@ -65,6 +83,39 @@ class StorageManager:
 
         conn.commit()
 
+    def _ensure_encrypted_logs(self, conn):
+        """Ensure any legacy plaintext rows in daily_logs are encrypted with AES-256-GCM."""
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT log_id, flow_intensity, symptoms, mood, notes FROM daily_logs"
+        )
+        rows = cursor.fetchall()
+        updated = False
+        for row in rows:
+            fields = ("flow_intensity", "symptoms", "mood", "notes")
+            needs_enc = any(
+                row[f] is not None and not str(row[f]).startswith("AES256GCM$")
+                for f in fields
+            )
+            if needs_enc:
+                enc_vals = [
+                    self.crypto.encrypt(row[f])
+                    if (row[f] is not None and not str(row[f]).startswith("AES256GCM$"))
+                    else row[f]
+                    for f in fields
+                ]
+                cursor.execute(
+                    '''
+                    UPDATE daily_logs
+                    SET flow_intensity = ?, symptoms = ?, mood = ?, notes = ?
+                    WHERE log_id = ?
+                    ''',
+                    (*enc_vals, row["log_id"]),
+                )
+                updated = True
+        if updated:
+            conn.commit()
+
     def _get_connection(self):
         resolved_path = self._resolve_path()
         uri = True if "?mode=memory" in resolved_path else False
@@ -90,6 +141,7 @@ class StorageManager:
     def initialize_database(self):
         conn = self._get_connection()
         self._create_tables(conn)
+        self._ensure_encrypted_logs(conn)
         conn.close()
 
     def add_cycle(self, start_date: date, end_date: date = None):
@@ -206,6 +258,13 @@ class StorageManager:
     def seed_sample_data(self):
         """Populate the database with 3 realistic 28-day cycles and encrypted daily logs."""
         self.initialize_database()
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM cycles")
+        cursor.execute("DELETE FROM daily_logs")
+        conn.commit()
+        conn.close()
+
         today = date.today()
         c3_start = today - timedelta(days=9)   # Day 10 of current cycle
         c2_start = c3_start - timedelta(days=28)

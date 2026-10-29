@@ -11,7 +11,7 @@ The application will follow a **Model-View-ViewModel (MVVM)** architecture to en
 ### 2. Technology Stack
 - **Language:** Python 3.10+
 - **UI Framework:** Kivy & KivyMD (for Material Design components).
-- **Local Storage:** SQLite3 with AES-128 Fernet encryption (`crypto_manager.py`) and shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`).
+- **Local Storage:** SQLite3 with AES-256-GCM encryption (`crypto_manager.py` via `pycryptodome`) and shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`).
 - **Platform Features (Notifications):** Plyer (Python library for accessing hardware features/APIs across platforms).
 - **Build & Packaging Tools:** PyInstaller (Windows `.exe`, Linux binaries), Buildozer (Android `.aab` targeting **API Level 36** with 32 KB memory page size alignment `-Wl,-z,max-page-size=32768` and dynamic version code > 400), Toolchain (`kivy-ios` for iOS `.xcarchive`).
 
@@ -38,8 +38,8 @@ Handles all CRUD (Create, Read, Update, Delete) operations with the SQLite datab
 - **Resilience**: Implements a shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`) with persistent connections to prevent app freezes on read-only environments (e.g., restricted mobile filesystems).
 
 #### 4.2 Crypto Manager
-Manages field-level encryption for sensitive health data using NIST-approved AES-128 via the `cryptography` library (Fernet).
-- **Transparent Key Management**: Automatically generates and stores a volatile `secret.key` within the isolated `user_data_dir` to encrypt fields like flow intensity, symptoms, mood, and notes before writing to the database, ensuring data-at-rest protection against casual extraction.
+Manages field-level encryption for sensitive health data using NIST-approved AES-256-GCM authenticated encryption via the `pycryptodome` library (`AES256GCM$` format).
+- **Transparent Key Management**: Automatically generates and stores a 32-byte `secret.key` within the isolated `user_data_dir` (or loads a bundled key on initial setup) to encrypt fields like flow intensity, symptoms, mood, and notes before writing to the database, ensuring data-at-rest protection against casual extraction.
 
 #### 4.3 Prediction Engine
 An algorithmic module that calculates the user's average cycle length and luteal phase from historical data (e.g., a rolling average of the last 6 cycles) to forecast future period dates and ovulation windows.
