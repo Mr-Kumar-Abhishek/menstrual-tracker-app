@@ -22,7 +22,7 @@ KV = '''
             orientation: 'horizontal'
             size_hint_y: None
             height: "48dp"
-            
+
             MDLabel:
                 text: "Enable Notifications"
                 valign: "center"
@@ -37,6 +37,11 @@ KV = '''
             text: "Export Data to JSON"
             pos_hint: {"center_x": .5}
             on_release: root.export_data()
+
+        MDRaisedButton:
+            text: "Load Sample Data"
+            pos_hint: {"center_x": .5}
+            on_release: root.load_sample_data()
 
         MDLabel:
             id: status_label
@@ -65,6 +70,16 @@ class SettingsView(MDScreen):
         self.ids.status_label.text = "Settings saved."
         self.ids.status_label.theme_text_color = "Custom"
         self.ids.status_label.text_color = [0, 0.7, 0, 1]
+
+    def load_sample_data(self):
+        try:
+            self.storage.seed_sample_data()
+            self.ids.status_label.text = "Sample data loaded successfully!"
+            self.ids.status_label.theme_text_color = "Custom"
+            self.ids.status_label.text_color = [0, 0.7, 0, 1]
+        except Exception as e:
+            self.ids.status_label.text = f"Failed to load sample data: {str(e)}"
+            self.ids.status_label.theme_text_color = "Error"
 
     def export_data(self):
         try:

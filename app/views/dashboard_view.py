@@ -1,4 +1,5 @@
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.button import MDFlatButton  # noqa: F401
 from kivy.lang import Builder
 from kivy.metrics import dp
 from app.viewmodels.dashboard_viewmodel import DashboardViewModel
@@ -37,9 +38,9 @@ KV = '''
             id: empty_state
             orientation: 'vertical'
             padding: "32dp"
-            spacing: "16dp"
+            spacing: "14dp"
             size_hint_y: None
-            height: "360dp"
+            height: "400dp"
             opacity: 0
 
             AnchorLayout:
@@ -72,6 +73,13 @@ KV = '''
                 pos_hint: {"center_x": 0.5}
                 md_bg_color: app.theme_cls.primary_color
                 on_release: root.go_to_log()
+
+            MDFlatButton:
+                text: "Load Sample Data"
+                pos_hint: {"center_x": 0.5}
+                theme_text_color: "Custom"
+                text_color: app.theme_cls.primary_color
+                on_release: root.load_sample_data()
 
         # ── Data cards (shown when data exists) ─────────────────
         ScrollView:
@@ -266,9 +274,9 @@ class DashboardView(MDScreen):
             # Show empty / onboarding state
             self.ids.empty_state.opacity = 1
             self.ids.empty_state.disabled = False
-            self.ids.empty_state.height = dp(360)
+            self.ids.empty_state.height = dp(400)
             self.ids.empty_state.padding = dp(32)
-            self.ids.empty_state.spacing = dp(16)
+            self.ids.empty_state.spacing = dp(14)
             self.ids.data_panel.opacity = 0
             self.ids.data_panel.disabled = True
             self.ids.header_subtitle.text = "Let's get started"
@@ -312,6 +320,11 @@ class DashboardView(MDScreen):
             return "Luteal phase \u2014 prioritise self-care and manage stress levels."
         else:
             return "Your cycle may be longer than average \u2014 keep logging!"
+
+    def load_sample_data(self):
+        """Seed sample cycles and daily logs, then refresh the dashboard."""
+        self.storage.seed_sample_data()
+        self._refresh()
 
     def go_to_log(self):
         """Switch bottom nav to the Log tab."""

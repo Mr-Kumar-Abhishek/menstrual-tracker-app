@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import logging
-from datetime import date
+from datetime import date, timedelta
 from app.models.crypto_manager import CryptoManager
 
 logger = logging.getLogger(__name__)
@@ -202,6 +202,47 @@ class StorageManager:
         ''', (key, value))
         conn.commit()
         conn.close()
+
+    def seed_sample_data(self):
+        """Populate the database with 3 realistic 28-day cycles and encrypted daily logs."""
+        self.initialize_database()
+        today = date.today()
+        c3_start = today - timedelta(days=9)   # Day 10 of current cycle
+        c2_start = c3_start - timedelta(days=28)
+        c1_start = c2_start - timedelta(days=28)
+
+        self.add_cycle(c1_start, c1_start + timedelta(days=4))
+        self.add_cycle(c2_start, c2_start + timedelta(days=4))
+        self.add_cycle(c3_start, c3_start + timedelta(days=4))
+
+        self.add_daily_log(
+            c3_start,
+            flow_intensity="Heavy",
+            symptoms="Cramps, Fatigue",
+            mood="Irritable",
+            notes="First day of period, rested in the afternoon.",
+        )
+        self.add_daily_log(
+            c3_start + timedelta(days=2),
+            flow_intensity="Medium",
+            symptoms="Mild headache",
+            mood="Sad",
+            notes="Staying hydrated and drinking herbal tea.",
+        )
+        self.add_daily_log(
+            c3_start + timedelta(days=4),
+            flow_intensity="Light",
+            symptoms="None",
+            mood="Neutral",
+            notes="Period wrapping up, energy returning.",
+        )
+        self.add_daily_log(
+            today,
+            flow_intensity="Light",
+            symptoms="None",
+            mood="Happy",
+            notes="Feeling energetic today!",
+        )
 
     def export_data(self, file_path: str):
         import json

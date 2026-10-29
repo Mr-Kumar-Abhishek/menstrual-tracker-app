@@ -1,7 +1,10 @@
 import os
+import tempfile
 from kivy.metrics import Metrics
 from kivy.core.window import Window
 from kivymd.uix.label import MDIcon
+from app.models.storage_manager import StorageManager
+from app.viewmodels.dashboard_viewmodel import DashboardViewModel
 from app.views.calendar_view import CalendarView
 from app.views.dashboard_view import DashboardView
 from app.views.settings_view import SettingsView
@@ -70,6 +73,28 @@ def test_dashboard_view_ui():
     view.on_enter()
     assert view.ids.current_cycle_label.text != ""
     assert view.ids.prediction_label.text != ""
+
+
+def test_load_sample_data_ui():
+    fd, tmp_db = tempfile.mkstemp()
+    os.close(fd)
+    try:
+        view = DashboardView()
+        view.storage = StorageManager(tmp_db)
+        view.storage.initialize_database()
+        view.viewmodel = DashboardViewModel(view.storage)
+        view.on_enter()
+        assert view.ids.empty_state.opacity == 1
+
+        view.load_sample_data()
+        assert view.ids.empty_state.opacity == 0
+        assert view.ids.data_panel.opacity == 1
+        assert view.ids.current_cycle_label.text == "Day 10"
+        assert len(view.storage.get_all_cycles()) == 3
+        assert len(view.storage.get_all_daily_logs()) == 4
+    finally:
+        if os.path.exists(tmp_db):
+            os.unlink(tmp_db)
 
 
 def test_app_and_dashboard_icons():
