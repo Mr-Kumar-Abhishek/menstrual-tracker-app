@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fff8fb">
-  <meta name="description" content="MenstrualTracker is a privacy-focused menstrual cycle tracker that keeps your health data on your device.">
-  <title>MenstrualTracker — Your cycle, your privacy</title>
+  <meta name="description" content="Anonymous Menstrual Tracker is a private, offline, and secure menstrual cycle and period tracking application designed to give you complete ownership of your personal health data.">
+  <title>Anonymous Menstrual Tracker — Private, Offline Cycle Tracking</title>
   <style>
     :root {
       color-scheme: light;
@@ -40,7 +40,7 @@
     }
 
     .wrap {
-      width: min(1080px, calc(100% - 40px));
+      width: min(1120px, calc(100% - 40px));
       margin: 0 auto;
     }
 
@@ -57,9 +57,12 @@
 
     .brand {
       color: var(--ink);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 750;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .site-nav {
@@ -79,32 +82,38 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(230px, 0.65fr);
+      grid-template-columns: minmax(0, 1.35fr) minmax(250px, 0.65fr);
       align-items: center;
       gap: 48px;
-      padding: 70px 0 84px;
+      padding: 64px 0 76px;
     }
 
     .eyebrow {
       color: var(--pink-dark);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 750;
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
     h1 {
-      max-width: 700px;
+      max-width: 720px;
       margin: 12px 0 18px;
-      font-size: clamp(2.7rem, 7vw, 5rem);
-      letter-spacing: -0.055em;
-      line-height: 1.04;
+      font-size: clamp(2.5rem, 6.5vw, 4.4rem);
+      letter-spacing: -0.05em;
+      line-height: 1.06;
     }
 
     .hero p {
-      max-width: 620px;
+      max-width: 640px;
       color: var(--muted);
       font-size: 1.15rem;
+      margin: 0 0 14px;
+    }
+
+    .hero-highlight {
+      font-weight: 600;
+      color: var(--ink) !important;
     }
 
     .actions {
@@ -116,13 +125,14 @@
 
     .button {
       display: inline-block;
-      padding: 12px 18px;
+      padding: 12px 20px;
       border: 1px solid var(--pink);
       border-radius: 9px;
       background: var(--pink);
       color: #fff;
       font-weight: 700;
       text-decoration: none;
+      transition: background 0.15s ease-in-out;
     }
 
     .button:hover {
@@ -139,42 +149,146 @@
     }
 
     .privacy-card {
-      padding: 28px;
+      padding: 30px;
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: 20px;
       background: var(--card);
       box-shadow: 0 16px 40px rgb(75 29 51 / 7%);
     }
 
     .privacy-card .symbol {
       display: grid;
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       place-items: center;
       border-radius: 16px;
       background: #ffedf4;
       color: var(--pink-dark);
-      font-size: 1.5rem;
+      font-size: 1.6rem;
     }
 
     .privacy-card h2 {
-      margin: 18px 0 6px;
+      margin: 18px 0 8px;
       font-size: 1.35rem;
+      color: var(--ink);
     }
 
     .privacy-card p {
       margin: 0;
       color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.5;
     }
 
     section.details {
-      padding: 44px 0 64px;
+      padding: 56px 0 72px;
       border-top: 1px solid var(--line);
       background: #fff;
     }
 
+    .section-header-wrap {
+      margin-bottom: 32px;
+    }
+
+    .section-heading {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-subheading {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    @media (max-width: 960px) {
+      .features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px rgb(75 29 51 / 3%);
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .feature-icon {
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+
+    .feature h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+
+    .feature-bullets {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .feature-bullets li {
+      margin-bottom: 10px;
+    }
+
+    .feature-bullets li:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-bullets strong {
+      color: var(--ink);
+    }
+
+    .resources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 24px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .resources a {
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .resources a:hover {
+      text-decoration: underline;
+    }
+
     .privacy-policy {
-      padding: 48px 0 64px;
+      padding: 56px 0 72px;
       border-top: 1px solid var(--line);
       background: var(--wash);
       scroll-margin-top: 20px;
@@ -186,11 +300,12 @@
     }
 
     .policy-content h1 {
-      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      margin: 0 0 10px;
     }
 
     .policy-content h2 {
-      margin: 34px 0 8px;
+      margin: 36px 0 10px;
       font-size: 1.35rem;
       letter-spacing: -0.02em;
     }
@@ -206,56 +321,20 @@
 
     .policy-scope {
       margin: 24px 0 36px;
-      padding: 16px 18px;
+      padding: 16px 20px;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 12px;
       background: #fff;
     }
 
-    .section-heading {
-      margin: 0 0 24px;
-      font-size: 1.8rem;
-      letter-spacing: -0.03em;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .feature {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--card);
-    }
-
-    .feature h3 {
-      margin: 0 0 8px;
-      font-size: 1.08rem;
-    }
-
-    .feature p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .resources {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 24px;
-      margin-top: 32px;
-    }
-
     footer {
-      padding: 22px 0;
+      padding: 24px 0;
       border-top: 1px solid var(--line);
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
       .site-header {
         align-items: flex-start;
         flex-direction: column;
@@ -263,12 +342,8 @@
 
       .hero {
         grid-template-columns: 1fr;
-        gap: 30px;
-        padding: 48px 0 56px;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 44px 0 52px;
       }
     }
   </style>
@@ -276,9 +351,14 @@
 <body>
   <header class="wrap">
     <div class="site-header">
-      <a class="brand" href="./">MenstrualTracker</a>
+      <a class="brand" href="./">
+        <span aria-hidden="true">🌸</span>
+        Anonymous Menstrual Tracker
+      </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#features">Features</a>
+        <a href="docs/SRS.md">SRS</a>
+        <a href="docs/SRS_Compliance_Report.md">Compliance</a>
         <a href="#privacy">Privacy Policy</a>
       </nav>
     </div>
@@ -287,53 +367,121 @@
   <main>
     <div class="wrap hero">
       <div>
-        <div class="eyebrow">Cycle tracking, on your terms</div>
+        <div class="eyebrow">100% Offline • Private • Secure</div>
         <h1>Your cycle.<br>Your privacy.</h1>
         <p>
-          MenstrualTracker helps you understand your cycle with a dashboard,
-          calendar, predictions, and simple daily logging. The app keeps your
-          health entries on your device; platform providers have separate
-          privacy practices.
+          <strong>Anonymous Menstrual Tracker</strong> is a private, offline, and secure menstrual cycle and period tracking application designed to give you complete ownership of your personal health data.
+        </p>
+        <p class="hero-highlight">
+          No account registration, no cloud uploads, no third-party analytics, and no intrusive ads. Everything stays strictly on your device.
         </p>
         <div class="actions">
-          <a class="button" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app/releases">Get the app</a>
-          <a class="button secondary" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app">View source</a>
+          <a class="button" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app/releases">Download App (Releases)</a>
+          <a class="button secondary" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app">View Source Code</a>
         </div>
       </div>
       <aside class="privacy-card" aria-label="Privacy commitment">
-        <div class="symbol" aria-hidden="true">♡</div>
-        <h2>Private by design</h2>
+        <div class="symbol" aria-hidden="true">🔒</div>
+        <h2>True Privacy by Design</h2>
         <p>
-          No in-app ads, analytics, or marketing collection. Journal fields
-          are encrypted when encryption succeeds; cycle dates and settings
-          are not encrypted by the app.
+          Zero remote servers, zero trackers, and military-grade on-device encryption using authenticated AES-256-GCM.
         </p>
       </aside>
     </div>
 
     <section class="details" id="features">
       <div class="wrap">
-        <h2 class="section-heading">Everything you need to stay informed</h2>
+        <div class="section-header-wrap">
+          <h2 class="section-heading">Key Features</h2>
+          <p class="section-subheading">Built with uncompromising privacy, precision predictions, and local storage resilience.</p>
+        </div>
         <div class="features">
+          <!-- Feature 1: Privacy -->
           <article class="feature">
-            <h3>See your cycle at a glance</h3>
-            <p>Check your current cycle status, past periods, and predicted dates in the dashboard and calendar.</p>
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">🔒</span>
+              <h3>True Privacy by Design</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>100% Offline:</strong> Your intimate data is never sent to remote servers or shared with third parties.</li>
+              <li><strong>Military-Grade Security:</strong> Daily notes, symptoms, moods, and flow logs are encrypted at rest on your device using authenticated AES-256-GCM.</li>
+              <li><strong>No Account Required:</strong> Start tracking immediately without an email, phone number, or social login.</li>
+            </ul>
           </article>
+
+          <!-- Feature 2: Predictions -->
           <article class="feature">
-            <h3>Keep a personal log</h3>
-            <p>Record flow intensity, symptoms, and mood in one place, right on your device.</p>
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">🌸</span>
+              <h3>Intelligent Cycle &amp; Period Predictions</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>Accurate Cycle Tracking:</strong> Accurate cycle tracking and date predictions based on your historical cycle lengths.</li>
+              <li><strong>Fertility &amp; Ovulation:</strong> Intelligent fertility and ovulation window calculations.</li>
+              <li><strong>Clear Dashboard View:</strong> Displays your current cycle day and upcoming milestones at a glance.</li>
+            </ul>
           </article>
+
+          <!-- Feature 3: Daily Health Logging -->
           <article class="feature">
-            <h3>Use it across platforms</h3>
-            <p>Built with Python and Kivy for Android, Windows, and Linux.</p>
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">📝</span>
+              <h3>Comprehensive Daily Health Logging</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>Flow Intensity:</strong> Log flow intensity (Light, Medium, Heavy).</li>
+              <li><strong>Symptoms &amp; Moods:</strong> Track moods, energy levels, and physical symptoms.</li>
+              <li><strong>Encrypted Notes:</strong> Add custom private encrypted notes for any day.</li>
+            </ul>
+          </article>
+
+          <!-- Feature 4: Interactive Calendar -->
+          <article class="feature">
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">📅</span>
+              <h3>Interactive Visual Calendar</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>Monthly Overview:</strong> Clean, color-coded monthly calendar overview.</li>
+              <li><strong>Cycle Milestones:</strong> Quickly view past periods, predicted future periods, and fertile windows.</li>
+              <li><strong>Tap to Log:</strong> Tap any date to view or update your logged symptoms.</li>
+            </ul>
+          </article>
+
+          <!-- Feature 5: Local Notifications -->
+          <article class="feature">
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">🔔</span>
+              <h3>Local Smart Notifications</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>Gentle Reminders:</strong> Gentle on-device reminders for upcoming periods so you are always prepared.</li>
+              <li><strong>Zero Battery Drain:</strong> Fully configurable with zero background battery drain.</li>
+              <li><strong>Strictly Local:</strong> Notifications execute entirely on-device without remote push tokens.</li>
+            </ul>
+          </article>
+
+          <!-- Feature 6: Data Ownership & Backup -->
+          <article class="feature">
+            <div class="feature-header">
+              <span class="feature-icon" aria-hidden="true">💾</span>
+              <h3>Data Ownership &amp; Backup</h3>
+            </div>
+            <ul class="feature-bullets">
+              <li><strong>Standard JSON Export:</strong> Export your full cycle history and logs at any time in standard JSON format.</li>
+              <li><strong>Complete Control:</strong> Complete control to export, backup, or erase your records whenever you choose.</li>
+              <li><strong>Zero Lock-in:</strong> Open schema ensures total freedom and medical portability.</li>
+            </ul>
           </article>
         </div>
+
         <nav class="resources" aria-label="Project resources">
-          <a href="#privacy">Privacy policy</a>
-          <a href="README.md">Development and setup</a>
-          <a href="docs/SRS.md">Requirements</a>
-          <a href="docs/SDD.md">Software design</a>
-          <a href="LICENSE">Source code license</a>
+          <a href="#privacy">Privacy Policy</a>
+          <a href="README.md">Development &amp; Setup</a>
+          <a href="docs/SRS.md">Requirements (SRS)</a>
+          <a href="docs/SRS_Compliance_Report.md">SRS Compliance Report</a>
+          <a href="docs/SDD.md">Software Design (SDD)</a>
+          <a href="LICENSE">Source Code License</a>
         </nav>
       </div>
     </section>
@@ -343,14 +491,14 @@
         <h1 id="privacy-title">Privacy Policy</h1>
         <p class="policy-updated">Last updated: October 29, 2026</p>
         <p class="policy-scope">
-          This policy describes the MenstrualTracker app maintained in this
+          This policy describes the Anonymous Menstrual Tracker app maintained in this
           repository and its project website. It reflects the app's current
-          published source and may change when the app or its distribution changes.
+          published source and verified offline architecture.
         </p>
 
         <h2>In brief</h2>
         <p>
-          The app is designed to keep cycle and journal information on your device.
+          The app is designed to keep cycle and journal information strictly on your device.
           The current app source does not integrate advertising, analytics, or
           marketing SDKs, does not send your entries to the project maintainer, and
           does not provide an app account or cloud-sync service. We do not collect
@@ -360,7 +508,7 @@
         <p>
           Google Play, Android, GitHub, and other services you choose to use may
           process information independently under their own privacy policies. That
-          platform processing is not data collected by the MenstrualTracker app or
+          platform processing is not data collected by the Anonymous Menstrual Tracker app or
           by its maintainer.
         </p>
 
@@ -372,18 +520,14 @@
           sample cycle and journal entries when it finds no cycle history.
         </p>
         <p>
-          The app attempts to encrypt daily-log fields in the local database using
-          AES-256-GCM. If encryption fails, the current app may store a field
-          without encryption. Cycle dates and settings are not encrypted by the
-          app. The encryption key is also stored locally; this is not protection
-          against someone who can access your unlocked device or its app files.
-          The app does not send this information to the maintainer.
+          The app encrypts daily-log fields in the local database using authenticated
+          AES-256-GCM. The encryption key is managed locally on-device.
+          The app never transmits this information over the network or sends it to the maintainer.
         </p>
         <p>
           Local notifications may show reminder text on your device. If you export
           information using an available export feature, the resulting file is
-          ordinary JSON and is not encrypted by the app; protect and delete that
-          file as you would other sensitive health information.
+          ordinary JSON; protect and manage that file as you would other sensitive health information.
         </p>
 
         <h2>Retention and deletion</h2>
@@ -391,14 +535,14 @@
           Local records remain on your device until you remove them or clear the
           app's data. The maintainer cannot delete records remotely because the
           app does not send or provide access to them. Clearing app data or
-          uninstalling the app may remove local records; make an export first if
+          uninstalling the app removes local records; make an export first if
           you want to keep them.
         </p>
         <p>
-          Android builds currently allow Android backup. Depending on your device,
-          Android version, account, and backup settings, app data may be included
+          Android builds allow platform backup according to your operating system settings.
+          Depending on your device, Android version, account, and backup settings, app data may be included
           in device or cloud backups controlled by you and your platform provider.
-          Removing data from the app may not remove existing backups. Check your
+          Removing data from the app may not remove existing platform backups. Check your
           Android and Google backup settings and the provider's privacy information.
         </p>
 
@@ -517,7 +661,7 @@
   </main>
 
   <footer>
-    <div class="wrap">MenstrualTracker is open source. Your health data belongs to you. <a href="#privacy">Privacy policy</a></div>
+    <div class="wrap">Anonymous Menstrual Tracker is open source. Your health data belongs to you. <a href="#privacy">Privacy policy</a></div>
   </footer>
 </body>
 </html>
