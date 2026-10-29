@@ -146,9 +146,18 @@ def test_main_view_rendering_and_tab_transitions():
     mv = MainView()
     assert mv.ids.bottom_nav.transition is InstantTabTransition
     assert isinstance(mv.ids.bottom_nav.ids.tab_manager.transition, InstantTabTransition)
+    assert mv.bottom_safe_inset > 0
+    assert mv.ids.bottom_nav.padding[3] == mv.bottom_safe_inset
     assert mv.ids.dashboard_view.ids.current_cycle_label.text != ""
     for tab_name in ("screen_calendar", "screen_log", "screen_settings", "screen_dashboard"):
         mv.ids.bottom_nav.switch_tab(tab_name)
         assert mv.ids.bottom_nav.ids.tab_manager.current == tab_name
         assert isinstance(mv.ids.bottom_nav.ids.tab_manager.transition, InstantTabTransition)
+
+    # Verify Android Back button (key 27) navigates back to Dashboard from other tabs
+    mv.ids.bottom_nav.switch_tab("screen_settings")
+    assert mv.ids.bottom_nav.ids.tab_manager.current == "screen_settings"
+    assert mv._on_keyboard(None, 27) is True
+    assert mv.ids.bottom_nav.ids.tab_manager.current == "screen_dashboard"
+    assert mv._on_keyboard(None, 27) is False
 

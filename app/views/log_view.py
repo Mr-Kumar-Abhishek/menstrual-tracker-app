@@ -8,8 +8,8 @@ KV = '''
 <LogEntryView>:
     MDBoxLayout:
         orientation: 'vertical'
-        padding: "20dp"
-        spacing: "12dp"
+        padding: "16dp", "14dp", "16dp", "16dp"
+        spacing: "10dp"
         md_bg_color: app.theme_cls.bg_normal
 
         MDLabel:
@@ -37,7 +37,7 @@ KV = '''
             text: "Medium"
             values: ["Light", "Medium", "Heavy"]
             size_hint_y: None
-            height: "44dp"
+            height: "40dp"
             background_normal: ""
             background_down: ""
             background_color: app.theme_cls.primary_color
@@ -61,7 +61,7 @@ KV = '''
             text: "Neutral"
             values: ["Happy", "Sad", "Irritable", "Anxious", "Neutral", "Mood Swings"]
             size_hint_y: None
-            height: "44dp"
+            height: "40dp"
             background_normal: ""
             background_down: ""
             background_color: app.theme_cls.primary_color
@@ -74,7 +74,7 @@ KV = '''
             mode: "rectangle"
             multiline: True
             size_hint_y: None
-            height: "72dp"
+            height: "60dp"
 
         MDBoxLayout:
             orientation: "horizontal"
