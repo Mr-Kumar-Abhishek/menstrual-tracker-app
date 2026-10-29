@@ -25,10 +25,10 @@ source.exclude_dirs = tests,bin,.buildozer,.github,docs,playstore_assets,build,d
 source.exclude_patterns = *.pyc,*_log*.txt,*.db,*.key,*.spec
 
 # (str) Application versioning
-version = 0.1.3
+version = 0.1.4
 
 # (numeric) Application version code (method 2)
-android.numeric_version = 403
+android.numeric_version = 404
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
