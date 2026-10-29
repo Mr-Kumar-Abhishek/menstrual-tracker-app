@@ -13,22 +13,22 @@ package.domain = anonymous.menstrual.tracker
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,json
+source.include_exts = py,png,jpg,kv,atlas,json,db,key
 
 # (list) Source files to exclude (let empty to not exclude anything)
 source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = tests,bin,.buildozer,.github,docs,playstore_assets,build,dist,.venv,.git,__pycache__
+source.exclude_dirs = tests,bin,.buildozer,.github,docs,playstore_assets,build,dist,.venv,.git,__pycache__,freetype-2.14.1
 
 # (list) List of exclusions using pattern matching
-source.exclude_patterns = *.pyc,*_log*.txt,*.db,*.key,*.spec
+source.exclude_patterns = *.pyc,*_log*.txt,*.spec,freetype*
 
 # (str) Application versioning
-version = 0.1.6
+version = 0.1.7
 
 # (numeric) Application version code (method 2)
-android.numeric_version = 406
+android.numeric_version = 407
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
