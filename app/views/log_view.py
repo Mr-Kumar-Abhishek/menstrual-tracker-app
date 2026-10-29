@@ -38,7 +38,11 @@ KV = '''
             values: ["Light", "Medium", "Heavy"]
             size_hint_y: None
             height: "44dp"
+            background_normal: ""
+            background_down: ""
             background_color: app.theme_cls.primary_color
+            color: 1, 1, 1, 1
+            bold: True
 
         MDTextField:
             id: symptoms_field
@@ -58,7 +62,11 @@ KV = '''
             values: ["Happy", "Sad", "Irritable", "Anxious", "Neutral", "Mood Swings"]
             size_hint_y: None
             height: "44dp"
+            background_normal: ""
+            background_down: ""
             background_color: app.theme_cls.primary_color
+            color: 1, 1, 1, 1
+            bold: True
 
         MDTextField:
             id: notes_field
@@ -70,24 +78,38 @@ KV = '''
 
         MDBoxLayout:
             orientation: "horizontal"
-            spacing: "10dp"
-            adaptive_width: True
+            spacing: "8dp"
+            size_hint_x: 1
             size_hint_y: None
-            height: "48dp"
-            pos_hint: {"center_x": .5}
+            height: "44dp"
 
             MDRaisedButton:
                 text: "Save Log"
+                size_hint_x: 1
+                _min_width: 0
+                padding: "4dp", "10dp"
+                elevation: 0
+                shadow_color: 0, 0, 0, 0
                 on_release: root.save_log()
 
             MDRaisedButton:
                 text: "Start Period"
-                md_bg_color: 0.8, 0.2, 0.2, 1
+                size_hint_x: 1
+                _min_width: 0
+                padding: "4dp", "10dp"
+                elevation: 0
+                shadow_color: 0, 0, 0, 0
+                md_bg_color: 0.85, 0.22, 0.27, 1
                 on_release: root.start_period()
 
             MDRaisedButton:
                 text: "End Period"
-                md_bg_color: 0.5, 0.5, 0.5, 1
+                size_hint_x: 1
+                _min_width: 0
+                padding: "4dp", "10dp"
+                elevation: 0
+                shadow_color: 0, 0, 0, 0
+                md_bg_color: 0.42, 0.45, 0.49, 1
                 on_release: root.end_period()
 
         MDLabel:

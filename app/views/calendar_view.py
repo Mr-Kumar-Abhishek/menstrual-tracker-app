@@ -168,8 +168,12 @@ KV = '''
         MDGridLayout:
             id: calendar_grid
             cols: 7
-            spacing: "4dp"
-            padding: "2dp"
+            spacing: "6dp"
+            padding: "4dp"
+            size_hint_y: None
+            height: "280dp"
+
+        Widget:
 '''
 Builder.load_string(KV)
 

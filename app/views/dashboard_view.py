@@ -72,6 +72,8 @@ KV = '''
             MDRaisedButton:
                 text: "Log First Period"
                 pos_hint: {"center_x": 0.5}
+                elevation: 0
+                shadow_color: 0, 0, 0, 0
                 md_bg_color: app.theme_cls.primary_color
                 on_release: root.go_to_log()
 

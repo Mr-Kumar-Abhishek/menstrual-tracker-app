@@ -39,11 +39,17 @@ KV = '''
         MDRaisedButton:
             text: "Export Data to JSON"
             pos_hint: {"center_x": .5}
+            size_hint_x: 0.75
+            elevation: 0
+            shadow_color: 0, 0, 0, 0
             on_release: root.export_data()
 
         MDRaisedButton:
             text: "Load Sample Data"
             pos_hint: {"center_x": .5}
+            size_hint_x: 0.75
+            elevation: 0
+            shadow_color: 0, 0, 0, 0
             on_release: root.load_sample_data()
 
         MDLabel:
