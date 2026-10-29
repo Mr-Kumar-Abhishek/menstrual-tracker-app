@@ -35,7 +35,7 @@ android.numeric_version = 402
 requirements = python3,kivy==2.3.1,kivymd==1.1.1,plyer,pycryptodome,pillow
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = %(source.dir)s/icon.png
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/icon.png

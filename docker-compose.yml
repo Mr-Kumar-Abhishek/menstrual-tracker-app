@@ -1,0 +1,21 @@
+services:
+  test:
+    build: .
+    command: xvfb-run -a pytest -v
+    volumes:
+      - .:/app
+
+  android-debug-apk:
+    image: kivy/buildozer:latest
+    working_dir: /home/user/hostcwd
+    volumes:
+      - .:/home/user/hostcwd
+      - buildozer-cache:/home/user/.buildozer
+    environment:
+      LDFLAGS: "-Wl,-z,max-page-size=32768"
+      P4A_EXTRA_LDFLAGS: "-Wl,-z,max-page-size=32768"
+    command: buildozer android debug
+
+volumes:
+  buildozer-cache:
+
