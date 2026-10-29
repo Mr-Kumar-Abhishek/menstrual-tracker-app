@@ -7,7 +7,12 @@ from app.models.prediction_engine import PredictionEngine
 class NotificationManager:
     def __init__(self):
         self.storage = StorageManager()
-        self.engine = PredictionEngine(self.storage.get_all_cycles())
+        self.storage.initialize_database()
+        try:
+            cycles = self.storage.get_all_cycles()
+        except Exception:
+            cycles = []
+        self.engine = PredictionEngine(cycles)
 
     def check_and_send_reminders(self):
         next_period = self.engine.predict_next_period()

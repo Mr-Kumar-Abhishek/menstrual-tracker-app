@@ -123,6 +123,11 @@ class StorageManager:
         try:
             conn = sqlite3.connect(resolved_path, uri=uri)
             conn.row_factory = sqlite3.Row
+            # Ensure database schema exists if connecting to an empty/newly created database
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='cycles'")
+            if cursor.fetchone() is None:
+                self._create_tables(conn)
             return conn
         except sqlite3.OperationalError as e:
             if not self._fallback_active:
