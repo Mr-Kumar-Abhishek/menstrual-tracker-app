@@ -54,7 +54,7 @@ jobs:
         poetry install
         poetry run pip install pyinstaller
     - name: Build with PyInstaller
-      run: xvfb-run poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+      run: xvfb-run poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile --add-data "icon.png:." --add-data "icon.jpg:." --icon "icon.png" main.py
     - name: Verify Linux Build
       run: |
         test -x dist/MenstrualTracker
@@ -71,7 +71,7 @@ jobs:
         cp dist/MenstrualTracker AppDir/usr/bin/menstrual-tracker
         ln -s usr/bin/menstrual-tracker AppDir/AppRun
         echo -e "[Desktop Entry]\nType=Application\nName=Menstrual Tracker\nExec=menstrual-tracker\nIcon=menstrual-tracker\nCategories=Utility;" > AppDir/menstrual-tracker.desktop
-        touch AppDir/menstrual-tracker.png
+        cp icon.png AppDir/menstrual-tracker.png
         wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool-x86_64.AppImage
         # Extract appimagetool (sometimes required in CI)
@@ -124,7 +124,7 @@ jobs:
     - name: Build with PyInstaller
       env:
         KIVY_GL_BACKEND: mock
-      run: poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile main.py
+      run: poetry run pyinstaller --name "MenstrualTracker" --windowed --onefile --add-data "icon.png;." --add-data "icon.jpg;." --icon "icon.ico" main.py
     - name: Verify Windows Build
       run: |
         if (!(Test-Path dist\MenstrualTracker.exe)) { exit 1 }
@@ -173,7 +173,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.buildozer
-        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'icon.png') }}
         restore-keys: |
           buildozer-global-${{ runner.os }}-
 
@@ -181,7 +181,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .buildozer
-        key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'icon.png') }}
     - name: Install Buildozer dependencies
       run: |
         sudo apt update

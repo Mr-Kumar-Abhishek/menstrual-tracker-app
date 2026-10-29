@@ -38,7 +38,7 @@ requirements = python3,kivy==2.3.1,kivymd==1.1.1,plyer,pycryptodome,pillow
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/icon.jpg
+icon.filename = %(source.dir)s/icon.png
 
 # (list) Supported orientations
 orientation = portrait

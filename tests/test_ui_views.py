@@ -1,5 +1,7 @@
+import os
 from kivy.metrics import Metrics
 from kivy.core.window import Window
+from kivymd.uix.label import MDIcon
 from app.views.calendar_view import CalendarView
 from app.views.dashboard_view import DashboardView
 from app.views.settings_view import SettingsView
@@ -68,6 +70,18 @@ def test_dashboard_view_ui():
     view.on_enter()
     assert view.ids.current_cycle_label.text != ""
     assert view.ids.prediction_label.text != ""
+
+
+def test_app_and_dashboard_icons():
+    app = MenstrualTrackerApp()
+    app.build()
+    assert os.path.exists(app.icon)
+    assert app.icon.endswith(("icon.png", "icon.jpg"))
+
+    view = DashboardView()
+    icon_names = [w.icon for w in view.walk() if isinstance(w, MDIcon)]
+    for expected in ("calendar-heart", "calendar-today", "water", "star-circle", "lightbulb-on-outline"):
+        assert expected in icon_names
 
 
 def test_calendar_view_ui():

@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.buildozer
-          key: buildozer-debug-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-debug-global-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'icon.png') }}
           restore-keys: |
             buildozer-debug-global-${{ runner.os }}-
 
@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .buildozer
-          key: buildozer-debug-project-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-debug-project-${{ runner.os }}-${{ hashFiles('buildozer.spec', 'icon.png') }}
           restore-keys: |
             buildozer-debug-project-${{ runner.os }}-
 

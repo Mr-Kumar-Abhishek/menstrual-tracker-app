@@ -1,3 +1,4 @@
+import os
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from app.views.main_view import MainView
@@ -7,6 +8,13 @@ from app.models.storage_manager import StorageManager
 
 class MenstrualTrackerApp(MDApp):
     def build(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        for icon_file in ("icon.png", "icon.jpg"):
+            icon_path = os.path.join(base_dir, icon_file)
+            if os.path.exists(icon_path):
+                self.icon = icon_path
+                break
+
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.theme_style = "Light"
 

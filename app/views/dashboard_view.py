@@ -1,5 +1,6 @@
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
+from kivy.metrics import dp
 from app.viewmodels.dashboard_viewmodel import DashboardViewModel
 from app.models.storage_manager import StorageManager
 
@@ -41,12 +42,16 @@ KV = '''
             height: "360dp"
             opacity: 0
 
-            MDIcon:
-                icon: "calendar-heart"
-                halign: "center"
-                font_size: "72sp"
-                theme_text_color: "Custom"
-                text_color: app.theme_cls.primary_color[:3] + [0.35]
+            AnchorLayout:
+                size_hint_y: None
+                height: "84dp"
+
+                MDIcon:
+                    icon: "calendar-heart"
+                    halign: "center"
+                    font_size: "72sp"
+                    theme_text_color: "Custom"
+                    text_color: app.theme_cls.primary_color[:3] + [0.35]
 
             MDLabel:
                 text: "Welcome to your cycle tracker!"
@@ -63,8 +68,7 @@ KV = '''
                 height: self.texture_size[1]
 
             MDRaisedButton:
-                text: "  Log First Period  "
-                icon: "plus-circle"
+                text: "Log First Period"
                 pos_hint: {"center_x": 0.5}
                 md_bg_color: app.theme_cls.primary_color
                 on_release: root.go_to_log()
@@ -90,17 +94,22 @@ KV = '''
                     elevation: 1
                     radius: [12,]
 
-                    MDIcon:
-                        icon: "calendar-today"
-                        font_size: "36sp"
-                        theme_text_color: "Custom"
-                        text_color: app.theme_cls.primary_color
+                    AnchorLayout:
                         size_hint_x: None
-                        width: "48dp"
+                        width: "44dp"
+
+                        MDIcon:
+                            icon: "calendar-today"
+                            halign: "center"
+                            font_size: "36sp"
+                            theme_text_color: "Custom"
+                            text_color: app.theme_cls.primary_color
 
                     MDBoxLayout:
                         orientation: "vertical"
                         spacing: "4dp"
+                        pos_hint: {"center_y": 0.5}
+                        adaptive_height: True
 
                         MDLabel:
                             text: "Current Cycle"
@@ -127,17 +136,22 @@ KV = '''
                     elevation: 1
                     radius: [12,]
 
-                    MDIcon:
-                        icon: "water"
-                        font_size: "36sp"
-                        theme_text_color: "Custom"
-                        text_color: 0.85, 0.15, 0.45, 1
+                    AnchorLayout:
                         size_hint_x: None
-                        width: "48dp"
+                        width: "44dp"
+
+                        MDIcon:
+                            icon: "water"
+                            halign: "center"
+                            font_size: "36sp"
+                            theme_text_color: "Custom"
+                            text_color: 0.85, 0.15, 0.45, 1
 
                     MDBoxLayout:
                         orientation: "vertical"
                         spacing: "4dp"
+                        pos_hint: {"center_y": 0.5}
+                        adaptive_height: True
 
                         MDLabel:
                             text: "Next Period"
@@ -164,17 +178,22 @@ KV = '''
                     elevation: 1
                     radius: [12,]
 
-                    MDIcon:
-                        icon: "star-circle"
-                        font_size: "36sp"
-                        theme_text_color: "Custom"
-                        text_color: 0.98, 0.6, 0.1, 1
+                    AnchorLayout:
                         size_hint_x: None
-                        width: "48dp"
+                        width: "44dp"
+
+                        MDIcon:
+                            icon: "star-circle"
+                            halign: "center"
+                            font_size: "36sp"
+                            theme_text_color: "Custom"
+                            text_color: 0.98, 0.6, 0.1, 1
 
                     MDBoxLayout:
                         orientation: "vertical"
                         spacing: "4dp"
+                        pos_hint: {"center_y": 0.5}
+                        adaptive_height: True
 
                         MDLabel:
                             text: "Ovulation Window"
@@ -199,16 +218,20 @@ KV = '''
                     size_hint: 1, None
                     height: "80dp"
                     elevation: 0
-                    md_bg_color: app.theme_cls.primary_light[:3] + [0.12]
+                    md_bg_color: 0.96, 0.88, 0.92, 1
                     radius: [12,]
 
-                    MDIcon:
-                        icon: "lightbulb-on-outline"
-                        font_size: "28sp"
-                        theme_text_color: "Custom"
-                        text_color: app.theme_cls.primary_color
+                    AnchorLayout:
                         size_hint_x: None
                         width: "40dp"
+
+                        MDIcon:
+                            id: tip_icon
+                            icon: "lightbulb-on-outline"
+                            halign: "center"
+                            font_size: "28sp"
+                            theme_text_color: "Custom"
+                            text_color: app.theme_cls.primary_color
 
                     MDLabel:
                         id: tip_label
@@ -216,6 +239,7 @@ KV = '''
                         font_style: "Caption"
                         theme_text_color: "Secondary"
                         text_size: self.width, None
+                        valign: "middle"
 
                 Widget:
                     size_hint_y: None
@@ -241,12 +265,22 @@ class DashboardView(MDScreen):
         if not has_data:
             # Show empty / onboarding state
             self.ids.empty_state.opacity = 1
+            self.ids.empty_state.disabled = False
+            self.ids.empty_state.height = dp(360)
+            self.ids.empty_state.padding = dp(32)
+            self.ids.empty_state.spacing = dp(16)
             self.ids.data_panel.opacity = 0
-            self.ids.header_subtitle.text = "Let's get started \U0001f331"
+            self.ids.data_panel.disabled = True
+            self.ids.header_subtitle.text = "Let's get started"
         else:
-            # Show data cards
+            # Show data cards and collapse empty state so it takes 0 height
             self.ids.empty_state.opacity = 0
+            self.ids.empty_state.disabled = True
+            self.ids.empty_state.height = 0
+            self.ids.empty_state.padding = 0
+            self.ids.empty_state.spacing = 0
             self.ids.data_panel.opacity = 1
+            self.ids.data_panel.disabled = False
 
             cycle_day = self.viewmodel.get_current_cycle_day()
             prediction = self.viewmodel.get_next_period_prediction()
@@ -266,18 +300,18 @@ class DashboardView(MDScreen):
         try:
             day_num = int(cycle_day.replace("Day ", ""))
         except (ValueError, AttributeError):
-            return "\U0001f4a7 Log your symptoms daily for better predictions."
+            return "Log your symptoms daily for better predictions."
 
         if day_num <= 5:
-            return "\U0001f4a7 During menstruation, stay hydrated and rest when needed."
+            return "During menstruation, stay hydrated and rest when needed."
         elif day_num <= 13:
-            return "\u2b50 Follicular phase — energy levels rise. Great time for new goals!"
+            return "Follicular phase \u2014 energy levels rise. Great time for new goals!"
         elif day_num <= 16:
-            return "\U0001f31f Ovulation phase — you may feel your most energetic and social."
+            return "Ovulation phase \u2014 you may feel your most energetic and social."
         elif day_num <= 28:
-            return "\U0001f319 Luteal phase — prioritise self-care and manage stress levels."
+            return "Luteal phase \u2014 prioritise self-care and manage stress levels."
         else:
-            return "\U0001f4c5 Your cycle may be longer than average — keep logging!"
+            return "Your cycle may be longer than average \u2014 keep logging!"
 
     def go_to_log(self):
         """Switch bottom nav to the Log tab."""
