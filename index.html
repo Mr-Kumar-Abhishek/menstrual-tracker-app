@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff8fb">
+  <meta name="description" content="MenstrualTracker is a privacy-focused menstrual cycle tracker that keeps your health data on your device.">
+  <title>MenstrualTracker — Your cycle, your privacy</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #34242d;
+      --muted: #715e68;
+      --pink: #b83268;
+      --pink-dark: #92254f;
+      --wash: #fff8fb;
+      --line: #f0dce5;
+      --card: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--wash);
+      color: var(--ink);
+      font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: var(--pink-dark);
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 22px 0;
+    }
+
+    .brand {
+      color: var(--ink);
+      font-size: 1.15rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(230px, 0.65fr);
+      align-items: center;
+      gap: 48px;
+      padding: 70px 0 84px;
+    }
+
+    .eyebrow {
+      color: var(--pink-dark);
+      font-size: 0.82rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 700px;
+      margin: 12px 0 18px;
+      font-size: clamp(2.7rem, 7vw, 5rem);
+      letter-spacing: -0.055em;
+      line-height: 1.04;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 18px;
+      border: 1px solid var(--pink);
+      border-radius: 9px;
+      background: var(--pink);
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      background: var(--pink-dark);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--pink-dark);
+    }
+
+    .button.secondary:hover {
+      background: #ffedf4;
+    }
+
+    .privacy-card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 16px 40px rgb(75 29 51 / 7%);
+    }
+
+    .privacy-card .symbol {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      border-radius: 16px;
+      background: #ffedf4;
+      color: var(--pink-dark);
+      font-size: 1.5rem;
+    }
+
+    .privacy-card h2 {
+      margin: 18px 0 6px;
+      font-size: 1.35rem;
+    }
+
+    .privacy-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    section.details {
+      padding: 44px 0 64px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .section-heading {
+      margin: 0 0 24px;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .resources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      margin-top: 32px;
+    }
+
+    footer {
+      padding: 22px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 48px 0 56px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <a class="brand" href="./">MenstrualTracker</a>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <div class="eyebrow">Cycle tracking, on your terms</div>
+        <h1>Your cycle.<br>Your privacy.</h1>
+        <p>
+          MenstrualTracker helps you understand your cycle with a dashboard,
+          calendar, predictions, and simple daily logging. Your health data
+          stays on your device.
+        </p>
+        <div class="actions">
+          <a class="button" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app/releases">Get the app</a>
+          <a class="button secondary" href="https://github.com/Mr-Kumar-Abhishek/menstrual-tracker-app">View source</a>
+        </div>
+      </div>
+      <aside class="privacy-card" aria-label="Privacy commitment">
+        <div class="symbol" aria-hidden="true">♡</div>
+        <h2>Private by design</h2>
+        <p>
+          Data is stored locally in SQLite, with sensitive entries encrypted
+          at rest. No cloud sync, tracking, or data selling.
+        </p>
+      </aside>
+    </div>
+
+    <section class="details">
+      <div class="wrap">
+        <h2 class="section-heading">Everything you need to stay informed</h2>
+        <div class="features">
+          <article class="feature">
+            <h3>See your cycle at a glance</h3>
+            <p>Check your current cycle status, past periods, and predicted dates in the dashboard and calendar.</p>
+          </article>
+          <article class="feature">
+            <h3>Keep a personal log</h3>
+            <p>Record flow intensity, symptoms, and mood in one place, right on your device.</p>
+          </article>
+          <article class="feature">
+            <h3>Use it across platforms</h3>
+            <p>Built with Python and Kivy for Android, Windows, and Linux.</p>
+          </article>
+        </div>
+        <nav class="resources" aria-label="Project resources">
+          <a href="README.md">Development and setup</a>
+          <a href="docs/SRS.md">Requirements</a>
+          <a href="docs/SDD.md">Software design</a>
+          <a href="LICENSE">Source code license</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">MenstrualTracker is open source. Your health data belongs to you.</div>
+  </footer>
+</body>
+</html>
