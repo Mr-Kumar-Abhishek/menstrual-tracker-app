@@ -35,6 +35,6 @@ class NotificationManager:
                 app_name="Menstrual Tracker",
                 timeout=10
             )
-        except NotImplementedError:
+        except Exception:
             # Notifications not supported on this platform without extra setup
             print(f"NOTIFICATION: {title} - {message}")

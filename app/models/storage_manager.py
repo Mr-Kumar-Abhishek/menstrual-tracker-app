@@ -139,10 +139,18 @@ class StorageManager:
             return conn
 
     def initialize_database(self):
-        conn = self._get_connection()
-        self._create_tables(conn)
-        self._ensure_encrypted_logs(conn)
-        conn.close()
+        try:
+            conn = self._get_connection()
+            self._create_tables(conn)
+            self._ensure_encrypted_logs(conn)
+            conn.close()
+        except Exception as e:
+            logger.error(f"Failed to initialize database: {e}")
+            if not self._fallback_active:
+                self.db_path = "file:memdb1?mode=memory&cache=shared"
+                self._fallback_active = True
+                self._fallback_conn = sqlite3.connect(self.db_path, uri=True)
+                self._create_tables(self._fallback_conn)
 
     def add_cycle(self, start_date: date, end_date: date = None):
         conn = self._get_connection()

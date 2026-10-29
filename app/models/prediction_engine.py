@@ -6,8 +6,16 @@ class PredictionEngine:
     LUTEAL_PHASE_LENGTH = 14
 
     def __init__(self, historical_cycles: list[dict]):
+        valid = []
+        for c in (historical_cycles or []):
+            if isinstance(c, dict) and c.get('start_date'):
+                try:
+                    datetime.strptime(c['start_date'], '%Y-%m-%d')
+                    valid.append(c)
+                except (ValueError, TypeError):
+                    pass
         self.historical_cycles = sorted(
-            historical_cycles,
+            valid,
             key=lambda c: datetime.strptime(c['start_date'], '%Y-%m-%d').date()
         )
 

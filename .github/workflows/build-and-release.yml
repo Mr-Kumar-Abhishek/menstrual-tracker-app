@@ -192,8 +192,10 @@ jobs:
 
     - name: Pre-download and extract freetype (Savannah 502 workaround)
       run: |
-        wget -O freetype-2.14.1.tar.gz https://mirror.csclub.uwaterloo.ca/nongnu/freetype/freetype-2.14.1.tar.gz
-        tar -xzf freetype-2.14.1.tar.gz
+        mkdir -p /tmp/freetype
+        wget -O /tmp/freetype/freetype-2.14.1.tar.gz https://mirror.csclub.uwaterloo.ca/nongnu/freetype/freetype-2.14.1.tar.gz
+        tar -xzf /tmp/freetype/freetype-2.14.1.tar.gz -C /tmp/freetype/
+        rm -rf freetype-2.14.1 freetype-2.14.1.tar.gz
 
     - name: Update version and version code
       run: |
@@ -206,7 +208,7 @@ jobs:
 
     - name: Build Release AAB with Buildozer
       env:
-        P4A_freetype_DIR: ${{ github.workspace }}/freetype-2.14.1
+        P4A_freetype_DIR: /tmp/freetype/freetype-2.14.1
         LDFLAGS: "-Wl,-z,max-page-size=32768"
         P4A_EXTRA_LDFLAGS: "-Wl,-z,max-page-size=32768"
       run: yes | ~/.local/bin/buildozer android release

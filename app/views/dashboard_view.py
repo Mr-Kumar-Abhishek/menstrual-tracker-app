@@ -11,40 +11,67 @@ from app.models.storage_manager import StorageManager
 
 def _clean_single_elevation_widget(w) -> None:
     try:
-        w.elevation = 0
         w._elevation = 0
-        w.shadow_color = [0.0, 0.0, 0.0, 0.0]
+        if hasattr(w, "_default_elevation"):
+            w._default_elevation = 0
+        if hasattr(w, "_elevation_raised"):
+            w._elevation_raised = 0
+        if hasattr(w, "_anim_raised"):
+            w._anim_raised = None
         w._shadow_color = [0.0, 0.0, 0.0, 0.0]
-        if hasattr(w, "on_pos"):
-            Window.unbind(on_draw=w.on_pos)
         if hasattr(w, "rect") and w.rect is not None:
             w.rect.size = (0, 0)
         if hasattr(w, "context") and w.context is not None:
             w.context["shadow_color"] = [0.0, 0.0, 0.0, 0.0]
-            try:
-                w.canvas.before.remove(w.context)
-            except ValueError:
-                pass
     except Exception:
         pass
 
 
 if hasattr(CommonElevationBehavior, "set_shader_string"):
-    # Patch KivyMD 1.1.x CommonElevationBehavior so its custom GLSL RenderContext
-    # never renders an opaque black shadow quad inside ScrollView on Android.
-    def _noop_elevation_method(self, *args, **kwargs):
+    # Patch KivyMD 1.1.x CommonElevationBehavior methods with matching __name__
+    # (required by Kivy's WeakMethod in Clock.schedule_once / Window.bind) so
+    # its custom GLSL RenderContext never renders a black shadow quad in ScrollView.
+    def set_shader_string(self, *args, **kwargs):
         _clean_single_elevation_widget(self)
 
-    CommonElevationBehavior.set_shader_string = _noop_elevation_method
-    CommonElevationBehavior.on_elevation = _noop_elevation_method
-    CommonElevationBehavior.on_shadow_color = _noop_elevation_method
-    CommonElevationBehavior.on_pos = _noop_elevation_method
-    CommonElevationBehavior.on_size = _noop_elevation_method
-    CommonElevationBehavior.hide_elevation = _noop_elevation_method
+    def on_elevation(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    def on_shadow_color(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    def on_pos(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    def on_size(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    def hide_elevation(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    CommonElevationBehavior.set_shader_string = set_shader_string
+    CommonElevationBehavior.on_elevation = on_elevation
+    CommonElevationBehavior.on_shadow_color = on_shadow_color
+    CommonElevationBehavior.on_pos = on_pos
+    CommonElevationBehavior.on_size = on_size
+    CommonElevationBehavior.hide_elevation = hide_elevation
 
 
 def strip_widget_elevation_shadow(widget) -> None:
     """Disable KivyMD CommonElevationBehavior GLSL/BoxShadow artifacts on a widget tree."""
+    for w in widget.walk(restrict=True):
+        if isinstance(w, CommonElevationBehavior) or hasattr(w, "shadow_color"):
+            try:
+                if getattr(w, "elevation", 0) != 0:
+                    w.elevation = 0
+                w.shadow_color = [0.0, 0.0, 0.0, 0.0]
+            except Exception:
+                pass
+            _clean_single_elevation_widget(w)
+    Clock.schedule_once(lambda dt: _deferred_strip(widget), 0)
+
+
+def _deferred_strip(widget) -> None:
     for w in widget.walk(restrict=True):
         if isinstance(w, CommonElevationBehavior) or hasattr(w, "shadow_color"):
             _clean_single_elevation_widget(w)
@@ -337,42 +364,45 @@ class DashboardView(MDScreen):
         strip_widget_elevation_shadow(self)
         if "empty_state" not in self.ids:
             return
-        cycles = self.storage.get_all_cycles()
-        has_data = bool(cycles)
+        try:
+            cycles = self.storage.get_all_cycles()
+            has_data = bool(cycles)
 
-        if not has_data:
-            # Show empty / onboarding state
-            self.ids.empty_state.opacity = 1
-            self.ids.empty_state.disabled = False
-            self.ids.empty_state.height = dp(400)
-            self.ids.empty_state.padding = dp(32)
-            self.ids.empty_state.spacing = dp(14)
-            self.ids.data_panel.opacity = 0
-            self.ids.data_panel.disabled = True
-            self.ids.header_subtitle.text = "Let's get started"
-        else:
-            # Show data cards and collapse empty state so it takes 0 height
-            self.ids.empty_state.opacity = 0
-            self.ids.empty_state.disabled = True
-            self.ids.empty_state.height = 0
-            self.ids.empty_state.padding = 0
-            self.ids.empty_state.spacing = 0
-            self.ids.data_panel.opacity = 1
-            self.ids.data_panel.disabled = False
+            if not has_data:
+                # Show empty / onboarding state
+                self.ids.empty_state.opacity = 1
+                self.ids.empty_state.disabled = False
+                self.ids.empty_state.height = dp(400)
+                self.ids.empty_state.padding = dp(32)
+                self.ids.empty_state.spacing = dp(14)
+                self.ids.data_panel.opacity = 0
+                self.ids.data_panel.disabled = True
+                self.ids.header_subtitle.text = "Let's get started"
+            else:
+                # Show data cards and collapse empty state so it takes 0 height
+                self.ids.empty_state.opacity = 0
+                self.ids.empty_state.disabled = True
+                self.ids.empty_state.height = 0
+                self.ids.empty_state.padding = 0
+                self.ids.empty_state.spacing = 0
+                self.ids.data_panel.opacity = 1
+                self.ids.data_panel.disabled = False
 
-            cycle_day = self.viewmodel.get_current_cycle_day()
-            prediction = self.viewmodel.get_next_period_prediction()
-            ovulation = self.viewmodel.get_ovulation_prediction()
+                cycle_day = self.viewmodel.get_current_cycle_day()
+                prediction = self.viewmodel.get_next_period_prediction()
+                ovulation = self.viewmodel.get_ovulation_prediction()
 
-            self.ids.current_cycle_label.text = cycle_day
-            self.ids.prediction_label.text = prediction
-            self.ids.ovulation_label.text = ovulation
+                self.ids.current_cycle_label.text = cycle_day
+                self.ids.prediction_label.text = prediction
+                self.ids.ovulation_label.text = ovulation
 
-            # Dynamic subtitle
-            self.ids.header_subtitle.text = f"Cycle {cycle_day} \u2014 tracking your wellness"
+                # Dynamic subtitle
+                self.ids.header_subtitle.text = f"Cycle {cycle_day} \u2014 tracking your wellness"
 
-            # Contextual tip
-            self.ids.tip_label.text = self._get_tip(cycle_day)
+                # Contextual tip
+                self.ids.tip_label.text = self._get_tip(cycle_day)
+        except Exception:
+            pass
 
     def _get_tip(self, cycle_day: str) -> str:
         try:
