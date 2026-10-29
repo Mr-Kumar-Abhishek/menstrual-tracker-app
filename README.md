@@ -2,16 +2,25 @@
 
 A privacy-focused, cross-platform menstrual cycle tracking application built with Python, Kivy, and KivyMD.
 
-MenstrualTracker prioritizes your data privacy by keeping all your personal health data locally on your device using SQLite. No cloud sync, no tracking, no data selling.
+MenstrualTracker prioritizes privacy by keeping app entries locally on your device using SQLite, with no app-side cloud sync or marketing collection. Google Play, Android, and other platform providers have separate privacy practices; see the [privacy policy](index.html#privacy).
 
 ## 🌟 Features
 
-- **Privacy First**: All data is stored locally via a SQLite database. Sensitive health data (symptoms, mood, flow intensity, notes) is transparently encrypted at rest using NIST-approved AES-128 (via Fernet). Includes a robust fallback mechanism to an in-memory database on read-only filesystems to prevent loading freezes.
+- **Privacy First**: Data is stored locally via SQLite. Daily-log fields (symptoms, mood, flow intensity, and notes) are encrypted at rest using AES-256-GCM; cycle dates and settings are not encrypted by the app. Includes a fallback to an in-memory database on read-only filesystems.
 - **Cross-Platform**: Seamlessly runs on Android, Windows, and Linux.
 - **Dashboard**: Quick overview of your current cycle status and predictions.
 - **Calendar View**: Visual timeline of past periods and predicted future dates.
 - **Logging**: Easy-to-use interface for logging flow intensity, symptoms, and moods.
 - **Reminders**: Local push notifications for upcoming period predictions.
+
+## 🔒 Privacy Policy
+
+Read the [MenstrualTracker privacy policy](index.html#privacy) for details about
+on-device data, encryption, platform-provider data, GDPR and California
+privacy and child-protection considerations. The app does not collect health
+entries for marketing or integrate an in-app advertising or analytics service.
+Google Play, Android, and other platform providers may process information
+independently under their own policies.
 
 ## 🚀 Downloads
 
