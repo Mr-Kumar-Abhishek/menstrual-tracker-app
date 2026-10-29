@@ -327,6 +327,67 @@
       background: #fff;
     }
 
+    .gallery-section {
+      padding: 56px 0 72px;
+      border-top: 1px solid var(--line);
+      background: var(--wash);
+    }
+
+    .feature-banner-card {
+      margin-bottom: 32px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgb(75 29 51 / 10%);
+      border: 1px solid var(--line);
+    }
+
+    .feature-banner-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .screenshots-scroll {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .screenshots-scroll {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .screenshot-item {
+        flex: 0 0 260px;
+        scroll-snap-align: start;
+      }
+    }
+
+    .screenshot-item {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgb(75 29 51 / 8%);
+      border: 1px solid var(--line);
+      background: #fff;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .screenshot-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgb(75 29 51 / 14%);
+    }
+
+    .screenshot-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
     footer {
       padding: 24px 0;
       border-top: 1px solid var(--line);
@@ -357,6 +418,7 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
         <a href="docs/SRS.md">SRS</a>
         <a href="docs/SRS_Compliance_Report.md">Compliance</a>
         <a href="#privacy">Privacy Policy</a>
@@ -483,6 +545,37 @@
           <a href="docs/SDD.md">Software Design (SDD)</a>
           <a href="LICENSE">Source Code License</a>
         </nav>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="screenshots">
+      <div class="wrap">
+        <div class="section-header-wrap">
+          <h2 class="section-heading">App Visuals &amp; Interface</h2>
+          <p class="section-subheading">A look inside the private, offline experience designed for simplicity and calm.</p>
+        </div>
+
+        <div class="feature-banner-card">
+          <img src="playstore_assets/feature_graphic.png" alt="Anonymous Menstrual Tracker Official Feature Graphic" loading="lazy" class="feature-banner-img">
+        </div>
+
+        <div class="screenshots-scroll">
+          <div class="screenshot-item">
+            <img src="playstore_assets/screenshot_1_predictions.png" alt="Smart Cycle Predictions" loading="lazy">
+          </div>
+          <div class="screenshot-item">
+            <img src="playstore_assets/screenshot_2_calendar.png" alt="Interactive Visual Calendar" loading="lazy">
+          </div>
+          <div class="screenshot-item">
+            <img src="playstore_assets/screenshot_3_logging.png" alt="Comprehensive Daily Health Logging" loading="lazy">
+          </div>
+          <div class="screenshot-item">
+            <img src="playstore_assets/screenshot_4_privacy.png" alt="True Privacy by Design" loading="lazy">
+          </div>
+          <div class="screenshot-item">
+            <img src="playstore_assets/screenshot_5_ownership.png" alt="Full Data Sovereignty &amp; Reminders" loading="lazy">
+          </div>
+        </div>
       </div>
     </section>
 
