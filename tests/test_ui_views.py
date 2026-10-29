@@ -161,3 +161,13 @@ def test_main_view_rendering_and_tab_transitions():
     assert mv.ids.bottom_nav.ids.tab_manager.current == "screen_dashboard"
     assert mv._on_keyboard(None, 27) is False
 
+    # Verify zero elevation shadows on Dashboard cards and ScrollView settings to prevent black scroll shadow
+    dv = mv.ids.dashboard_view
+    assert dv.ids.data_panel.always_overscroll is False
+    cards = [w for w in dv.walk() if w.__class__.__name__ == "MDCard"]
+    assert len(cards) == 4
+    for card in cards:
+        assert card.elevation == 0
+        assert list(card.shadow_color) == [0.0, 0.0, 0.0, 0.0]
+
+

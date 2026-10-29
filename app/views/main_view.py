@@ -9,7 +9,10 @@ from kivy.metrics import dp, sp
 from kivy.properties import NumericProperty
 from kivy.uix.screenmanager import NoTransition
 # Import all child views so KV lang can resolve them
-from app.views.dashboard_view import DashboardView  # noqa: F401
+from app.views.dashboard_view import (  # noqa: F401
+    DashboardView,
+    strip_widget_elevation_shadow,
+)
 from app.views.calendar_view import CalendarView    # noqa: F401
 from app.views.log_view import LogEntryView         # noqa: F401
 from app.views.settings_view import SettingsView    # noqa: F401
@@ -134,6 +137,7 @@ class MainView(MDScreen):
         Clock.schedule_once(self._sync_bottom_bar, 0)
 
     def _sync_bottom_bar(self, *args):
+        strip_widget_elevation_shadow(self)
         if "bottom_nav" not in self.ids:
             return
         bnav = self.ids.bottom_nav

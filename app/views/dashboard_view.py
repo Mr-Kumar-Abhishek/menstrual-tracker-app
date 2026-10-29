@@ -1,12 +1,58 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.button import MDFlatButton  # noqa: F401
+from kivymd.uix.behaviors import CommonElevationBehavior
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.metrics import dp
 from app.viewmodels.dashboard_viewmodel import DashboardViewModel
 from app.models.storage_manager import StorageManager
 
+
+def _clean_single_elevation_widget(w) -> None:
+    try:
+        w.elevation = 0
+        w._elevation = 0
+        w.shadow_color = [0.0, 0.0, 0.0, 0.0]
+        w._shadow_color = [0.0, 0.0, 0.0, 0.0]
+        if hasattr(w, "on_pos"):
+            Window.unbind(on_draw=w.on_pos)
+        if hasattr(w, "rect") and w.rect is not None:
+            w.rect.size = (0, 0)
+        if hasattr(w, "context") and w.context is not None:
+            w.context["shadow_color"] = [0.0, 0.0, 0.0, 0.0]
+            try:
+                w.canvas.before.remove(w.context)
+            except ValueError:
+                pass
+    except Exception:
+        pass
+
+
+if hasattr(CommonElevationBehavior, "set_shader_string"):
+    # Patch KivyMD 1.1.x CommonElevationBehavior so its custom GLSL RenderContext
+    # never renders an opaque black shadow quad inside ScrollView on Android.
+    def _noop_elevation_method(self, *args, **kwargs):
+        _clean_single_elevation_widget(self)
+
+    CommonElevationBehavior.set_shader_string = _noop_elevation_method
+    CommonElevationBehavior.on_elevation = _noop_elevation_method
+    CommonElevationBehavior.on_shadow_color = _noop_elevation_method
+    CommonElevationBehavior.on_pos = _noop_elevation_method
+    CommonElevationBehavior.on_size = _noop_elevation_method
+    CommonElevationBehavior.hide_elevation = _noop_elevation_method
+
+
+def strip_widget_elevation_shadow(widget) -> None:
+    """Disable KivyMD CommonElevationBehavior GLSL/BoxShadow artifacts on a widget tree."""
+    for w in widget.walk(restrict=True):
+        if isinstance(w, CommonElevationBehavior) or hasattr(w, "shadow_color"):
+            _clean_single_elevation_widget(w)
+
+
 KV = '''
+#:import ScrollEffect kivy.effects.scroll.ScrollEffect
+
 <DashboardView>:
     MDBoxLayout:
         orientation: 'vertical'
@@ -88,12 +134,18 @@ KV = '''
         ScrollView:
             id: data_panel
             opacity: 0
+            effect_cls: ScrollEffect
+            always_overscroll: False
+            bar_width: "3dp"
+            bar_color: app.theme_cls.primary_color[:3] + [0.25]
+            bar_inactive_color: 0, 0, 0, 0
 
             MDBoxLayout:
                 orientation: 'vertical'
                 padding: "16dp"
                 spacing: "12dp"
                 adaptive_height: True
+                md_bg_color: app.theme_cls.bg_normal
 
                 # Current Cycle card
                 MDCard:
@@ -102,7 +154,10 @@ KV = '''
                     spacing: "16dp"
                     size_hint: 1, None
                     height: "90dp"
-                    elevation: 1
+                    elevation: 0
+                    shadow_color: 0, 0, 0, 0
+                    md_bg_color: 1, 1, 1, 1
+                    line_color: 0.88, 0.88, 0.91, 1
                     radius: [12,]
 
                     AnchorLayout:
@@ -144,7 +199,10 @@ KV = '''
                     spacing: "16dp"
                     size_hint: 1, None
                     height: "90dp"
-                    elevation: 1
+                    elevation: 0
+                    shadow_color: 0, 0, 0, 0
+                    md_bg_color: 1, 1, 1, 1
+                    line_color: 0.88, 0.88, 0.91, 1
                     radius: [12,]
 
                     AnchorLayout:
@@ -186,7 +244,10 @@ KV = '''
                     spacing: "16dp"
                     size_hint: 1, None
                     height: "90dp"
-                    elevation: 1
+                    elevation: 0
+                    shadow_color: 0, 0, 0, 0
+                    md_bg_color: 1, 1, 1, 1
+                    line_color: 0.88, 0.88, 0.91, 1
                     radius: [12,]
 
                     AnchorLayout:
@@ -229,6 +290,7 @@ KV = '''
                     size_hint: 1, None
                     height: "80dp"
                     elevation: 0
+                    shadow_color: 0, 0, 0, 0
                     md_bg_color: 0.96, 0.88, 0.92, 1
                     radius: [12,]
 
@@ -265,12 +327,14 @@ class DashboardView(MDScreen):
         self.storage = StorageManager()
         self.storage.initialize_database()
         self.viewmodel = DashboardViewModel(self.storage)
+        strip_widget_elevation_shadow(self)
         Clock.schedule_once(lambda dt: self._refresh(), 0)
 
     def on_enter(self, *args):
         self._refresh()
 
     def _refresh(self):
+        strip_widget_elevation_shadow(self)
         if "empty_state" not in self.ids:
             return
         cycles = self.storage.get_all_cycles()
