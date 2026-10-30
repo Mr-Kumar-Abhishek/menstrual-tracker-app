@@ -66,8 +66,8 @@ jobs:
       - name: Build Debug APK with Buildozer
         env:
           P4A_freetype_DIR: /tmp/freetype/freetype-2.14.1
-          LDFLAGS: "-Wl,-z,max-page-size=32768"
-          P4A_EXTRA_LDFLAGS: "-Wl,-z,max-page-size=32768"
+          LDFLAGS: "-Wl,-z,max-page-size=65536"
+          P4A_EXTRA_LDFLAGS: "-Wl,-z,max-page-size=65536"
         run: yes | ~/.local/bin/buildozer android debug
 
       - name: Locate and collect APK
