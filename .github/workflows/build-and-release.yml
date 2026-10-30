@@ -203,7 +203,13 @@ jobs:
         if [ -n "$NEW_VER" ]; then
           sed -i "s/^version = .*/version = $NEW_VER/" buildozer.spec
         fi
-        VERSION_CODE=$((400 + ${{ github.run_number }}))
+        CURRENT_VC=$(grep -E '^android\.numeric_version\s*=' buildozer.spec | awk -F'=' '{print $2}' | tr -d ' ')
+        RUN_VC=$((400 + ${{ github.run_number }}))
+        if [ -n "$CURRENT_VC" ] && [ "$CURRENT_VC" -ge "$RUN_VC" ]; then
+          VERSION_CODE=$((CURRENT_VC + 1))
+        else
+          VERSION_CODE=$RUN_VC
+        fi
         sed -i "s/^android.numeric_version = .*/android.numeric_version = $VERSION_CODE/" buildozer.spec
 
     - name: Build Release AAB with Buildozer

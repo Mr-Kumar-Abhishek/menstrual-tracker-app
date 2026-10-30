@@ -50,8 +50,8 @@ This project will be developed using **Agile methodologies** combined with a **T
 - **Goal:** Upgrade target Android API level, establish Play Store versioning standards, enhance encryption, and harden local storage resilience.
 - **Tasks:**
   - **Android Target API Upgrade:** Updated target SDK to **API Level 36** (`android.api = 36`) in `buildozer.spec` to ensure compatibility with modern Android runtime requirements.
-  - **64 KB Memory Page Size Support:** Configured linker flags (`-Wl,-z,max-page-size=65536`) in CI/CD pipeline (`LDFLAGS` & `P4A_EXTRA_LDFLAGS`) and packaging alignment (`zipalign -P 64`) to ensure native `.so` binaries align with 64 KB memory page size standards (supporting 16 KB and 64 KB kernels per Android guidelines).
-  - **Play Store Version Code Management:** Configured baseline numeric version code to **401** in `buildozer.spec` and automated CI/CD version code incrementing as `400 + ${{ github.run_number }}` in `build-and-release.yml`.
+  - **Exact 64 KB Kernel & 64 KB or Above Memory Page Size Support:** Configured native linker flags (`-Wl,-z,max-page-size=65536`) in CI/CD pipeline (`LDFLAGS` & `P4A_EXTRA_LDFLAGS`) and packaging alignment (`zipalign -P 64`) to ensure native `.so` binaries align with exact 64 KB (65,536 bytes) or above memory page sizes for exact 64 KB kernels, fully supporting 64 KB and 16 KB kernel architectures per Android guidelines.
+  - **Play Store Strictly Incremental Version Code Management:** Configured baseline numeric version code to **413** in `buildozer.spec` and automated CI/CD version code incrementing logic (`VERSION_CODE = max(CURRENT_VC + 1, 400 + github.run_number)`) in `build-and-release.yml` to guarantee that every release build always produces a strictly incremental version code.
   - **Data Security:** Implemented transparent field-level AES-256-GCM authenticated encryption (`crypto_manager.py` via `pycryptodome`) for sensitive logs stored locally in SQLite.
   - **Storage Resilience:** Added a shared in-memory database fallback (`file:memdb1?mode=memory&cache=shared`) to handle read-only filesystems without app freezes.
   - **CI/CD Pipeline Refinement:** Consolidated release workflows into `build-and-release.yml` with automated semver tag creation, release notes, and multi-platform binary signing.
@@ -59,7 +59,7 @@ This project will be developed using **Agile methodologies** combined with a **T
 ### 3. Continuous Integration / Continuous Deployment (CI/CD) Strategy
 GitHub Actions is utilized to automate test and release pipelines:
 1. **`test.yml`**: Triggers on push and pull requests. Runs Python `pytest` suite and `flake8` linting.
-2. **`build-and-release.yml`**: Triggers on pushes to `main`/`master`. Packages and releases binaries for Windows (`.exe`), Linux (`.deb`, `.rpm`, `.AppImage`), Android (`.aab` signed), and iOS (`.xcarchive`). Increments version tag and sets `android.numeric_version` > 400 dynamically.
+2. **`build-and-release.yml`**: Triggers on pushes to `main`/`master`. Packages and releases binaries for Windows (`.exe`), Linux (`.deb`, `.rpm`, `.AppImage`), Android (`.aab` signed), and iOS (`.xcarchive`). Increments version tag and ensures `android.numeric_version` is always strictly incremental across releases.
 
 ### 4. Testing Strategy
 - **Unit Tests (`pytest`):** Core logic (predictions, math), Database queries, and ViewModel state management.

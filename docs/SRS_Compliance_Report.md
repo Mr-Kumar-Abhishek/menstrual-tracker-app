@@ -91,7 +91,7 @@ This report evaluates the application codebase against the updated Software Requ
 | **NFR-REL-1: Storage Resilience & Fallback** | ✅ Compliant | `StorageManager._get_connection()` catches corrupted files/headers and automatically falls back to an in-memory SQLite database (`test_sqlite_fallback_on_corrupt_file`). |
 | **NFR-PERF-1: Responsiveness & Launch Time** | ✅ Compliant | Verified by [`test_performance.py`](file:///d:/big-projects/menstrual-tracker-app/tests/test_performance.py): imports and prediction engine calculations complete in < 0.1s. |
 | **NFR-UI-1: Material Design & Elevation Safety** | ✅ Compliant | Neutralized KivyMD elevation shaders (`elevation: 0`, `shadow_color: 0, 0, 0, 0`), `ScrollEffect` with `always_overscroll: False`, and safe navigation insets. |
-| **NFR-PORT-1: Multi-Platform Parity** | ✅ Compliant | Validated on Windows (`.exe`), Linux (`AppImage`, `.deb`, `.rpm`), and Android (API 24–36, 64KB page size alignment supporting 16KB/64KB kernels, signed AAB and APK). |
+| **NFR-PORT-1: Multi-Platform Parity** | ✅ Compliant | Validated on Windows (`.exe`), Linux (`AppImage`, `.deb`, `.rpm`), and Android (API 24–36, exact 64KB or above page size alignment for 64KB kernels, strictly incremental version code, signed AAB and APK). |
 
 ---
 
